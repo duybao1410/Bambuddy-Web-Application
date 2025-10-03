@@ -4,8 +4,7 @@ Bambuddy is a full-stack Node.js web application designed to connect internation
 It provides a tour booking system, management dashboards, and a forum for discussion.
 
 ---
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 
 ## 🔗 Website Access
 
@@ -13,7 +12,7 @@ It provides a tour booking system, management dashboards, and a forum for discus
 - **GitHub Repository URL:** [https://github.com/RMIT-Vietnam-Teaching/group-project-wps-2025b-4bit.git]
 =======
 =======
->>>>>>> c50de79b6e815fde00ff5438dc2cb2c84ad9aa2f
+
 ## 🔗 Project Overview doc 
 
 - **Project Overview Link** https://docs.google.com/document/d/18WNLq97LKyvkpNxUhQojp8OCLuwqVhX6j6XoOkcWyms/edit?tab=t.0#heading=h.loja6rpf1zh
@@ -22,10 +21,7 @@ It provides a tour booking system, management dashboards, and a forum for discus
 ## 🔗 Website Access
 
 - **Live Website URL:** [https://bambuddy.onrender.com](https://bambuddy.onrender.com)
-<<<<<<< HEAD
->>>>>>> c50de79b6e815fde00ff5438dc2cb2c84ad9aa2f
-=======
->>>>>>> c50de79b6e815fde00ff5438dc2cb2c84ad9aa2f
+
 
 ---
 
@@ -42,20 +38,6 @@ Use the following accounts to log in and test website functionality:
 | User 2  | Bambuddyuser2@gmail.com      | Bambuddy123! |
 
 ---
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-## 🗄 Database Connection
-
-We use **MongoDB Atlas** for our database.
-
-- Connection String: mongodb+srv://bambuddydb:bambuddy123@studioproject.eakdu8f.mongodb.net/?retryWrites=true&w=majority&appName=StudioProject
-=======
-
->>>>>>> c50de79b6e815fde00ff5438dc2cb2c84ad9aa2f
-=======
-
->>>>>>> c50de79b6e815fde00ff5438dc2cb2c84ad9aa2f
 
 ## 📝 Features Overview
 
@@ -143,15 +125,8 @@ We use **MongoDB Atlas** for our database.
 1. Clone the repository:
 
 ```bash
-<<<<<<< HEAD
-<<<<<<< HEAD
-git clone https://github.com/RMIT-Vietnam-Teaching/group-project-wps-2025b-4bit.git
-=======
+
 git clone https://github.com/duybao1410/Bambuddy-Web-Application.git
->>>>>>> c50de79b6e815fde00ff5438dc2cb2c84ad9aa2f
-=======
-git clone https://github.com/duybao1410/Bambuddy-Web-Application.git
->>>>>>> c50de79b6e815fde00ff5438dc2cb2c84ad9aa2f
 ```
 
 2. Install Dependencies
