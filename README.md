@@ -25,11 +25,7 @@ Use the following accounts to log in and test website functionality:
 
 ---
 
-## 🗄 Database Connection
 
-We use **MongoDB Atlas** for our database.
-
-- Connection String: mongodb+srv://bambuddydb:bambuddy123@studioproject.eakdu8f.mongodb.net/?retryWrites=true&w=majority&appName=StudioProject
 
 ## 📝 Features Overview
 
