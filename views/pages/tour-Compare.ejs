@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Comparison</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <!-- Bootstrap Icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+
+    <!-- Google Font -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+    />
+
+    <!-- CSS Global Variable -->
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
+
+
+    <script src="/js/theme-loader.js"></script>
+  </head>
+  <body theme="class="<%= (user && user.theme) || 'light' %>"">
+
+    <header role="banner">
+      <%- include('../partials/navbar') %>
+    </header>
+
+    <div class="container my-5">
+      <h2 class="mb-4">Compare Tours</h2>
+      <div class="table-responsive">
+        <table class="table align-middle text-center">
+          <thead class="table-light">
+            <tr>
+              <th></th>
+              <% tours.forEach(tour => { %>
+                <th class="fs-5"><%= tour.title %></th>
+              <% }); %>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+      <td><strong>Image</strong></td>
+      <% tours.forEach(tour => { %>
+        <td>
+          <img 
+            src="/uploads/tours/<%= tour.images[0] %>" 
+            alt="Tour Image" 
+            class="img-fluid rounded" 
+            style="max-width: 150px; height: auto;" 
+          />
+        </td>
+      <% }); %>
+    </tr>
+
+            <tr>
+              <td><strong>Location</strong></td>
+              <% tours.forEach(tour => { %>
+                <td><%= tour.location.city %> <br /><small><%= tour.location.address %></small></td>
+              <% }); %>
+            </tr>
+            <tr>
+      <td><strong>Guide</strong></td>
+      <% tours.forEach(tour => { %>
+        <td>
+          <a href="/guide/info/<%= tour.guideId._id %>" style="text-decoration: none; color: inherit;">
+            <%= tour.guideId.profileInfo.firstName %> <%= tour.guideId.profileInfo.lastName %>
+          </a>
+        </td>
+      <% }); %>
+    </tr>
+            <tr>
+              <td><strong>Duration (minutes)</strong></td>
+              <% tours.forEach(tour => { %>
+                <td><%= tour.durationMinutes %></td>
+              <% }); %>
+            </tr>
+            <tr>
+              <td><strong>Category</strong></td>
+              <% tours.forEach(tour => { %>
+                <td><%= tour.category.join(", ") %></td>
+              <% }); %>
+            </tr>
+          <%
+      const prices = tours.map(t => t.pricing);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+    %>
+
+    <tr>
+      <td><strong>Pricing</strong></td>
+      <% tours.forEach(tour => { 
+        const price = tour.pricing;
+        let priceClass = 'text-secondary'; // mặc định
+
+        if (price === minPrice) {
+          priceClass = 'text-success fw-bold'; // rẻ nhất
+        } else if (price === maxPrice) {
+          priceClass = 'text-danger fw-bold'; // đắt nhất
+        }
+      %>
+        <td>
+          <span class="<%= priceClass %> fs-5">
+            <i class="bi bi-cash-coin me-1"></i>
+            <%= price.toLocaleString('en-US', { style: 'currency', currency: 'VND' }) %>
+          </span>
+        </td>
+      <% }); %>
+    </tr>
+            <tr>
+      <td><strong>Average Rating</strong></td>
+      <% tours.forEach(tour => { %>
+        <td>
+          <a href="#" 
+            class="text-primary fw-bold"
+            data-bs-toggle="modal"
+            data-bs-target="#ratingModal-<%= tour._id %>"
+            style="color: var(--primary-dark) !important" >
+            <%= tour.averageRating %> / 5 (<%= tour.rating.length %> reviews)
+          </a>
+        </td>
+      <% }); %>
+    </tr>
+            <tr>
+              <td><strong>Availability</strong></td>
+              <% tours.forEach(tour => { %>
+                <td>
+                  <% tour.availability.forEach(avail => { %>
+                    <% if (!avail.isBooked) { %>
+                      <span class="badge me-1" style="background-color: var(--primary-main) !important" ><%= avail.date %></span>
+                    <% } else { %>
+                      <span class="badge bg-danger me-1"><%= avail.date %></span>
+                    <% } %>
+                  <% }); %>
+                </td>
+              <% }); %>
+            </tr>
+            <tr>
+      <td><strong>Description</strong></td>
+      <% tours.forEach(tour => { %>
+        <td style="text-align: left;">
+          <%= tour.description.substring(0, 200) %>...
+          <br />
+          <a 
+            href="#"
+            class="text-primary fw-bold"
+            data-bs-toggle="modal"
+            data-bs-target="#descriptionModal-<%= tour._id %>"
+            style="color: var(--primary-main) !important">
+            Read more
+          </a>
+        </td>
+      <% }); %>
+    </tr>
+    <tr>
+      <td><strong>Actions</strong></td>
+      <% tours.forEach(tour => { %>
+        <td>
+          <a href="/tourDetail/<%= tour._id %>" class="btn btn-primary btn-sm">
+            Booking Now       
+        </a>
+        </td>
+      <% }); %>
+    </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!--Rating modal-->
+      <% tours.forEach(tour => { %>
+        <div
+          class="modal fade"
+          id="ratingModal-<%= tour._id %>"
+          tabindex="-1"
+          aria-labelledby="ratingModalLabel-<%= tour._id %>"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content p-4">
+              <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="ratingModalLabel-<%= tour._id %>">
+                  Reviews for <%= tour.title %>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <% if (Array.isArray(tour.rating) && tour.rating.length > 0) { %>
+                  <% tour.rating.forEach(r => { %>
+                    <div class="mb-4 border-bottom pb-2">
+                      <div class="d-flex align-items-center mb-1">
+                        <span class="me-2 text-warning" aria-label="Rating <%= r.count %> out of 5 stars">
+                          <% for (let i = 0; i < r.count; i++) { %>★<% } %>
+                          <% for (let i = r.count; i < 5; i++) { %>☆<% } %>
+                        </span>
+                        <strong>
+                          <%= r.userId?.profileInfo?.firstName || 'Unknown' %>
+                          <%= r.userId?.profileInfo?.lastName || '' %>
+                        </strong>
+                      </div>
+                      <p class="mb-0"><%= r.text || 'No comment provided.' %></p>
+                    </div>
+                  <% }) %>
+                <% } else { %>
+                  <p>No reviews yet.</p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div
+        class="modal fade"
+        id="descriptionModal-<%= tour._id %>"
+        tabindex="-1"
+        aria-labelledby="descriptionModalLabel-<%= tour._id %>"
+        aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content p-4">
+              <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="descriptionModalLabel-<%= tour._id %>">
+                  What You'll Experience
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body description-text" style="color:var(--text-color)">
+                <p><%= tour.description %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+
+
+      <%- include('../partials/footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

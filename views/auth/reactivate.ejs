@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reactivate Account</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"/>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+ 
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body class="light">
+  <% if (user && user.status === 'deactivated') { %>
+    <div class="d-flex align-items-center justify-content-center min-vh-100">
+      <div class="token-container reactivate-container">
+      <div class="token-header">
+        <h1 class="token-main-title">Bambuddy</h1>
+        <h2 class="token-subtitle">Reactivate Your Account</h2>
+      </div>
+
+      <div class="token-content">
+        <div class="alert alert-warning">
+          Your account is currently <strong>deactivated</strong>.  
+          To regain access to all features, please confirm you want to reactivate it.
+        </div>
+
+        <div class="token-instructions">
+          <ul>
+            <li>Your profile will become visible again.</li>
+            <li>You can start receiving booking requests.</li>
+            <li>All previous data (messages, bookings, settings) will be restored.</li>
+          </ul>
+        </div>
+        <div class="checkbox-container mb-3">
+          <input type="checkbox" id="reactivateCheck">
+          <label for="reactivateCheck">I want to reactivate my account</label>
+        </div>
+        <div class="divider mb-3"></div>
+        <button class="continue-btn btn btn-success w-100" id="reactivateBtn" disabled>
+          Reactivate Account
+        </button>
+      </div>
+      </div>
+    </div>
+  <% } else if (user && user.status === 'banned') { %>
+    <div class="d-flex align-items-center justify-content-center min-vh-100">
+      <div class="container text-center reactivate-banned-container">
+        <h2 class="text-danger fw-bold">Your account has been banned</h2>
+        <p>Please contact support if you believe this is a mistake.</p>
+      </div>
+    </div>
+  <% } else { %>
+    <script>
+      window.location.href = '/auth/login';
+    </script>
+  <% } %>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const reactivateCheck = document.getElementById('reactivateCheck');
+      const reactivateBtn = document.getElementById('reactivateBtn');
+
+      if (reactivateCheck && reactivateBtn) {
+        reactivateCheck.addEventListener('change', function() {
+          reactivateBtn.disabled = !this.checked;
+        });
+
+        reactivateBtn.addEventListener('click', async function() {
+          try {
+            await fetch('/auth/reactivate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({})
+            });
+            window.location.href = '/';
+          } catch (e) {
+            console.error('Failed to reactivate account', e);
+            alert('Something went wrong while reactivating your account.');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

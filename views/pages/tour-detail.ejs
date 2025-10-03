@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= data.title %> - Tour Detail</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="/css/tour.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <!--  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>-->
+    <script src="/js/tour.js"></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARyhluPcYNs1bwXP5b-ywt8UW7ZZQtNsI&callback=initMap"
+      async
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/js/theme-loader.js"></script>
+  </head>
+  <body class="<%= user?.theme || 'light' %>">
+    <%- include('../partials/navbar') %>
+
+    <!-- Error Alert -->
+    <% if (query.error) { %>
+    <div
+      class="alert alert-danger alert-dismissible fade show container mt-3"
+      role="alert"
+      aria-live="assertive"
+    >
+      <%= query.error %>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    <% } %>
+
+    <!-- Header Section -->
+    <section
+      role="banner"
+      aria-labelledby="tour-title"
+      class="detialTour-background-header py-3"
+    >
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 id="tour-title"><%= data.title %></h1>
+            <p class="bi bi-geo-alt-fill" aria-label="Location">
+              <%= [ data.location.address || '', data.location.city || '',
+              data.location.region || '', data.location.country || ''
+              ].filter(Boolean).join(', ') || 'Unknown Location' %>
+            </p>
+            <p class="bi bi-clock-fill" aria-label="Tour Duration">
+              <% const duration = data.durationMinutes; if (duration >= 60) {
+              const hours = Math.floor(duration / 60); const minutes = duration
+              % 60; %> <% if (hours === 1) { %> Tour Duration | <%= hours %>
+              hour <%= minutes %> minutes <% } else { %> Tour Duration | <%=
+              hours %> hours <%= minutes %> minutes <% } %> <% } else { %> Tour
+              Duration | <%= duration %> minutes <% } %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section role="region" aria-label="Tour Image Gallery" class="py-4">
+      <div class="container">
+        <!-- MOBILE VERSION: Carousel -->
+        <div class="d-md-none">
+          <div
+            id="mobileTourCarousel"
+            class="carousel slide"
+            data-bs-ride="carousel"
+            role="carousel"
+            aria-label="Tour images carousel"
+          >
+            <div class="carousel-inner">
+              <% data.images.forEach((img, index) => { %>
+              <div
+                class="carousel-item <%= index === 0 ? 'active' : '' %>"
+                aria-current="<%= index === 0 ? 'true' : 'false' %>"
+              >
+                <div class="ratio ratio-16x9 bordered-image bg-secondary">
+                  <img
+                    src="/uploads/tours/<%= img %>"
+                    class="img-fluid object-fit-cover"
+                    alt="Tour image <%= index + 1 %>"
+                    style="cursor: pointer"
+                    onclick="showImageModal('/uploads/tours/<%= img %>')"
+                  />
+                </div>
+              </div>
+              <% }) %>
+            </div>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#mobileTourCarousel"
+              data-bs-slide="prev"
+              aria-label="Previous image"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#mobileTourCarousel"
+              data-bs-slide="next"
+              aria-label="Next image"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+            </button>
+          </div>
+        </div>
+        <!-- DESKTOP VERSION: Grid Layout -->
+        <div class="d-none d-md-block">
+          <div class="row g-2">
+            <div class="col-md-6">
+              <div class="ratio bordered-image ratio-16x9 bg-secondary">
+                <img
+                  src="/uploads/tours/<%= data.images[0] %>"
+                  class="img-fluid object-fit-contain"
+                  alt="Main tour image"
+                  style="cursor: pointer"
+                  onclick="showImageModal('/uploads/tours/<%= data.images[0] %>')"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row g-2">
+                <% for(let i = 1; i <= 4 && data.images[i]; i++) { %>
+                <div class="col-6">
+                  <div class="ratio bordered-image ratio-16x9 bg-secondary">
+                    <img
+                      src="/uploads/tours/<%= data.images[i] %>"
+                      class="img-fluid object-fit-cover"
+                      alt="Tour image <%= i + 1 %>"
+                      style="cursor: pointer"
+                      onclick="showImageModal('/uploads/tours/<%= data.images[i] %>')"
+                    />
+                  </div>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tour Detail Boxes -->
+    <div class="container py-3">
+      <div class="row g-3 align-items-stretch">
+        <!-- Tour Guide -->
+        <div class="col-md-2 text-center">
+          <div
+            class="border border-1 border-secondary p-3 rounded h-100 d-flex flex-column align-items-center justify-content-center"
+            role="region"
+            aria-labelledby="guide-title"
+          >
+            <p id="guide-title" class="tour-section-header">Tour Guide</p>
+            <a
+              href="/guide/info/<%= data.guideId?._id %>"
+              style="text-decoration: none; color: inherit"
+            >
+              <img
+                src="<%= (data.guideId?.profileInfo?.profilePhoto)
+                ? (data.guideId.profileInfo.profilePhoto.startsWith('http')
+                    ? data.guideId.profileInfo.profilePhoto
+                    : ('/uploads/profilePicture/' + data.guideId.profileInfo.profilePhoto))
+                : '/img/defaultAvatar.png' %>"
+                alt="Profile photo of <%= data.guideId?.profileInfo?.firstName || 'Unknown' %> <%= data.guideId?.profileInfo?.lastName || '' %>"
+                class="rounded-circle mb-2"
+                style="
+                  width: 80px;
+                  height: 80px;
+                  object-fit: cover;
+                  cursor: pointer;
+                "
+              />
+            </a>
+            <a
+              href="/guide/info/<%= data.guideId?._id %>"
+              style="text-decoration: none; color: inherit"
+            >
+              <p class="mb-0" style="cursor: pointer">
+                <%= data.guideId?.profileInfo?.firstName || 'Unknown' %> <%=
+                data.guideId?.profileInfo?.lastName || '' %>
+              </p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Services -->
+        <div class="col-md-4">
+          <div
+            class="border border-1 border-secondary p-3 rounded h-100"
+            role="region"
+            aria-labelledby="services-title"
+          >
+            <p id="services-title" class="tour-section-header">Service Types</p>
+            <ul class="mb-0" id="categoryList">
+              <% const maxToShow = 5; %> <% for (let i = 0; i <
+              data.category.length; i++) { %>
+              <li class="<%= i >= maxToShow ? 'd-none extra-category' : '' %>">
+                <%= data.category[i] %>
+              </li>
+              <% } %>
+            </ul>
+            <% if (data.category.length > maxToShow) { %>
+            <button
+              class="btn btn-link p-0 mt-2"
+              onclick="toggleCategories(event)"
+              aria-expanded="false"
+              aria-controls="categoryList"
+            >
+              See More
+            </button>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Rating -->
+        <div class="col-md-2">
+          <div
+            class="border border-1 border-secondary p-3 rounded text-center h-100 d-flex flex-column justify-content-center"
+            role="region"
+            aria-labelledby="rating-title"
+          >
+            <h2 id="rating-title" class="text-success fw-bold">
+              <%= data.averageRating ? data.averageRating.toFixed(1) : "0.0"
+              %>/5
+            </h2>
+            <p class="mb-0 tour-section-header">
+              <strong>
+                <% if (data.averageRating >= 4) { %> High <% } else if
+                (data.averageRating >= 3) { %> Medium <% } else { %> Low <% } %> </strong
+              ><br />
+              <a
+                href="#"
+                class="text-primary fw-bold"
+                data-bs-toggle="modal"
+                data-bs-target="#ratingModal"
+                aria-controls="ratingModal"
+                style="color: var(--primary-main) !important"
+                ><%= data.rating.length %> Reviews</a
+              >
+            </p>
+          </div>
+
+          <!-- Rating Modal -->
+          <div
+            class="modal fade"
+            id="ratingModal"
+            tabindex="-1"
+            aria-labelledby="ratingModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+              <div class="modal-content p-4">
+                <div class="modal-header border-0">
+                  <h5 class="modal-title fw-bold" id="ratingModalLabel">
+                    Customer Reviews
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <% if (Array.isArray(data.rating) && data.rating.length > 0) {
+                  %> <% data.rating.forEach(r => { %>
+                  <div class="mb-4 border-bottom pb-2">
+                    <div class="d-flex align-items-center mb-1">
+                      <span
+                        class="me-2 text-warning"
+                        aria-label="Rating <%= r.count %> out of 5 stars"
+                      >
+                        <% for (let i = 0; i < r.count; i++) { %>★<% } %> <% for
+                        (let i = r.count; i < 5; i++) { %>☆<% } %>
+                      </span>
+                      <strong
+                        ><%= r.userId?.profileInfo?.firstName || 'Unknown' %>
+                        <%= r.userId?.profileInfo?.lastName || '' %></strong
+                      >
+                    </div>
+                    <p class="mb-0"><%= r.text || 'No comment provided.' %></p>
+                  </div>
+                  <% }) %> <% } else { %>
+                  <p>No reviews yet.</p>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="col-md-2">
+          <div
+            class="border border-1 border-secondary p-3 rounded h-100"
+            role="region"
+            aria-labelledby="location-title"
+          >
+            <p id="location-title" class="tour-section-header">Location</p>
+            <div
+              id="map"
+              data-lat="<%= data.location?.coordinates?.lat || 0 %>"
+              data-lng="<%= data.location?.coordinates?.lng || 0 %>"
+              data-address="<%= data.location?.address || '' %>"
+              style="height: 100px; width: 100%"
+              aria-label="Map showing tour location"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Booking -->
+        <div class="col-md-2">
+          <div
+            class="bg-custom-orange border border-1 border-secondary p-3 rounded text-white text-center h-100 d-flex flex-column justify-content-center align-items-center"
+            role="region"
+            aria-labelledby="booking-title"
+          >
+            <p id="booking-title" class="d-none">Booking Section</p>
+            <a href="#bookingSection" class="btn text-white px-3 py-2 mb-2">
+              <h4 class="mb-0" style="color: white !important">
+                <strong>Book Now!</strong>
+              </h4>
+            </a>
+            <div class="price-display">
+              <p class="mb-0">Price: <%= data.pricing %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description Section -->
+    <div class="container py-3">
+      <div class="row">
+        <div class="col-md-12">
+          <div
+            class="border border-1 border-secondary p-3 rounded"
+            role="region"
+            aria-labelledby="description-title"
+          >
+            <p id="description-title" class="tour-section-header">
+              Description
+            </p>
+            <% let truncatedDescription = ''; if (data.description && typeof
+            data.description === 'string') { const words =
+            data.description.split(/\s+/); if (words.length > 200) {
+            truncatedDescription = words.slice(0, 100).join(' ') + '...'; } else
+            { truncatedDescription = data.description; } } %>
+            <p class="text-muted description-text">
+              <%= truncatedDescription %>
+            </p>
+            <a
+              href="#"
+              class="text-primary fw-bold"
+              data-bs-toggle="modal"
+              data-bs-target="#experienceModal"
+              aria-controls="experienceModal"
+              style="color: var(--primary-dark) !important"
+              >Show more</a
+            >
+          </div>
+
+          <!-- Description Modal -->
+          <div
+            class="modal fade"
+            id="experienceModal"
+            tabindex="-1"
+            aria-labelledby="experienceModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+              <div class="modal-content p-4">
+                <div class="modal-header border-0">
+                  <h5 class="modal-title fw-bold" id="experienceModalLabel">
+                    What You'll Experience
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body description-text">
+                  <p><%= data.description %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tour Itinerary Section -->
+    <div class="container py-3">
+      <div class="row">
+        <div class="col-md-12">
+          <div
+            class="border border-1 border-secondary p-3 rounded"
+            role="region"
+            aria-labelledby="itinerary-title"
+          >
+            <p id="itinerary-title" class="tour-section-header">
+              Tour Itinerary
+            </p>
+            <% let truncatedItinerary = ''; if (data.itinerary && typeof
+            data.itinerary === 'string') { const words =
+            data.itinerary.split(/\s+/); if (words.length > 200) {
+            truncatedItinerary = words.slice(0, 100).join(' ') + '...'; } else {
+            truncatedItinerary = data.itinerary; } } %>
+            <p class="text-muted itinerary-text">
+              <%- truncatedItinerary.replace(/\n/g, '<br />') %>
+            </p>
+            <a
+              href="#"
+              class="text-primary fw-bold"
+              data-bs-toggle="modal"
+              data-bs-target="#itineraryModal"
+              aria-controls="itineraryModal"
+              style="color: var(--primary-dark) !important"
+              >Show more</a
+            >
+          </div>
+
+          <!-- Itinerary Modal -->
+          <div
+            class="modal fade"
+            id="itineraryModal"
+            tabindex="-1"
+            aria-labelledby="itineraryModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+              <div class="modal-content p-4">
+                <div class="modal-header border-0">
+                  <h5 class="modal-title fw-bold" id="itineraryModalLabel">
+                    Tour Itinerary
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body itinerary-text">
+                  <p><%- data.itinerary.replace(/\n/g, '<br />') %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Booking Section -->
+    <div class="container py-4" id="bookingSection">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div
+            class="Booking-Section border border-1 border-secondary p-4 rounded shadow-sm"
+            role="region"
+            aria-labelledby="booking-form-title"
+          >
+            <h4
+              id="booking-form-title"
+              class="mb-4 text-center font-primary-dark"
+            >
+              <i class="bi bi-calendar-check-fill me-2" aria-hidden="true"></i
+              >Book Your Tour
+            </h4>
+            <% const availableDates = data.availability.filter(slot =>
+            !slot.isBooked); %> <% if (availableDates.length > 0) { %>
+            <form
+              id="bookingForm"
+              method="POST"
+              action="/createBooking/<%= data._id %>"
+            >
+              <div class="mb-3">
+                <label for="start" class="form-label fw-semibold"
+                  >Choose an available date:</label
+                >
+                <select
+                  id="start"
+                  name="tourDate"
+                  class="form-select"
+                  aria-describedby="date-help"
+                >
+                  <% availableDates.forEach(function(slot) { %>
+                  <option value="<%= slot.date %>"><%= slot.date %></option>
+                  <% }) %>
+                </select>
+                <small id="date-help" class="form-text text-muted"
+                  >Select a date to book your tour.</small
+                >
+              </div>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-booking-tour">
+                  <i
+                    class="bi bi-check-circle-fill me-1"
+                    aria-hidden="true"
+                  ></i>
+                  Book Tour
+                </button>
+              </div>
+            </form>
+            <% } else { %>
+            <p class="text-danger text-center fw-semibold" aria-live="polite">
+              <i
+                class="bi bi-exclamation-triangle-fill me-2"
+                aria-hidden="true"
+              ></i
+              >No available dates for this tour.
+            </p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div
+      class="modal fade"
+      id="imageModal"
+      tabindex="-1"
+      aria-labelledby="imageModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-transparent border-0">
+          <div class="modal-header border-0">
+            <h5 class="modal-title d-none" id="imageModalLabel">
+              Enlarged Tour Image
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white ms-auto"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body p-0 text-center">
+            <img
+              id="modalImage"
+              src=""
+              alt="Enlarged tour image"
+              class="img-fluid rounded"
+              style="max-height: 80vh; object-fit: contain"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>

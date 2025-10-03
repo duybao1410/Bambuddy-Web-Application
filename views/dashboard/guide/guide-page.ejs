@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      <%= guide.profileInfo.firstName %> <%= guide.profileInfo.lastName %> -
+      Guide Page
+    </title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/user.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/js/theme-loader.js"></script>
+    <style>
+      .guide-hero {
+        position: relative;
+      }
+
+      .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 40px;
+      }
+
+      .hero-overlay h1 {
+        color: var(--primary-lightest);
+        font-weight: var(--font-weight-bold);
+      }
+    </style>
+  </head>
+
+  <body class="<%= user?.theme || 'light' %>">
+    <%- include('../../partials/navbar') %>
+
+    <main class="container my-xl-4">
+      <div class="header-container row my-4">
+        <div class="col-12 pe-0">
+          <div class="guide-hero">
+            <img
+              src="/img/guidePageHeader.png"
+              alt="About Bambuddy"
+              class="img-fluid w-100"
+            />
+            <div class="hero-overlay">
+              <h1>Guide Page</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row content">
+        <aside class="col-12 col-xl-4 col-md-5 tourguideInfo-container">
+          <div
+            class="infoCard py-md-4 px-xl-4 me-xl-4 px-md-3 px-3 py-3 mb-3 mb-md-0"
+          >
+            <h5 class="text-center">Tour Guide</h5>
+
+            <div class="img-container d-flex justify-content-center">
+              <img
+                src="<%= guide.profileInfo.profilePhoto && guide.profileInfo.profilePhoto !== 'defaultAvatar.png' 
+                  ? '/uploads/profilePicture/' + guide.profileInfo.profilePhoto 
+                  : '/img/defaultAvatar.png' %>"
+                alt="<%= guide.profileInfo.firstName %> <%= guide.profileInfo.lastName %>"
+                class="profile-picture"
+              />
+            </div>
+
+            <div class="tourguideInfo">
+              <p id="tourGuideName" class="text-center mt-3">
+                <strong
+                  ><%= guide.profileInfo.firstName %> <%=
+                  guide.profileInfo.lastName %></strong
+                >
+              </p>
+              <% if (guide.guideInfo && guide.guideInfo.professionalTitle) { %>
+              <p class="text-center">
+                <em>(<%= guide.guideInfo.professionalTitle %>)</em>
+              </p>
+              <% } %> <% if (guide.guideInfo && guide.guideInfo.languages &&
+              guide.guideInfo.languages.length > 0) { %>
+              <p><strong>Language Spoken</strong></p>
+              <% guide.guideInfo.languages.forEach(language => { %>
+              <p>• <%= language %></p>
+              <% }); %> <% } %> <% if (guide.guideInfo &&
+              guide.guideInfo.specializations &&
+              guide.guideInfo.specializations.length > 0) { %>
+              <p><strong>Tour Specializations</strong></p>
+              <% guide.guideInfo.specializations.forEach(specialization => { %>
+              <p>• <%= specialization %></p>
+              <% }); %> <% } %> <% if (guide.profileInfo.bio) { %>
+              <p><strong>Bio</strong></p>
+              <p class="text-justify"><%= guide.profileInfo.bio %></p>
+              <% } %> <% if ((guide.profileInfo.facebook &&
+              guide.profileInfo.facebook.trim()) || (guide.profileInfo.instagram
+              && guide.profileInfo.instagram.trim())) { %>
+              <div class="social-links mt-3">
+                <% if (guide.profileInfo.facebook &&
+                guide.profileInfo.facebook.trim()) { %>
+                <a
+                  href="<%= guide.profileInfo.facebook %>"
+                  target="_blank"
+                  class="me-3"
+                  aria-label="Facebook"
+                >
+                  <i class="bi bi-facebook fs-4 text-primary"></i>
+                </a>
+                <% } %> <% if (guide.profileInfo.instagram &&
+                guide.profileInfo.instagram.trim()) { %>
+                <a
+                  href="<%= guide.profileInfo.instagram %>"
+                  target="_blank"
+                  aria-label="Instagram"
+                >
+                  <i class="bi bi-instagram fs-4 text-danger"></i>
+                </a>
+                <% } %>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </aside>
+
+        <section
+          class="col-12 col-xl-8 col-md-7 tourservices-lists-container px-md-0"
+        >
+          <div class="tourservices-lists px-md-4 py-md-4 p-3 mb-3">
+            <h5>Tour Guide's Services</h5>
+
+            <div class="my-xl-3">
+              <% if (tours && tours.length > 0) { %> <% tours.forEach(tour => {
+              %>
+              <div class="services-card py-xl-3 px-xl-4 mb-3 p-md-4 p-3">
+                <div class="row align-items-center">
+                  <div class="col-xl-4 col-12">
+                    <img
+                      src="<%= tour.images && tour.images.length > 0 
+                            ? '/uploads/tours/' + tour.images[0] 
+                            : '/img/defaultTour.png' %>"
+                      alt="<%= tour.title %>"
+                      class="img-fluid rounded"
+                    />
+                  </div>
+                  <div class="col-xl-8 col-12">
+                    <div class="row mb-3">
+                      <h5 class="tour-title mb-1"><%= tour.title %></h5>
+                      <p class="tour-location mb-1">
+                        <strong>Location</strong>: <%= tour.location.city %>
+                      </p>
+                      <p class="tour-description mb-1">
+                        <%= tour.description.length > 100 ?
+                        tour.description.substring(0, 200) + '...' :
+                        tour.description %>
+                      </p>
+                    </div>
+
+                    <div class="row">
+                      <div class="col">
+                        <p class="tour-reviews mb-1">
+                          <% const avgRating = tour.averageRating || 0; const
+                          totalReviews = tour.totalReviews || 0; %> ⭐️<%=
+                          avgRating %>/5 (<%= totalReviews %> reviews)
+                        </p>
+                        <h5 class="tour-price mb-0">
+                          <%= (tour.pricing).toLocaleString() %> VND
+                        </h5>
+                      </div>
+                      <div class="col d-flex flex-column">
+                        <div class="mt-auto d-flex justify-content-end">
+                          <a
+                            href="/tourDetail/<%= tour._id %>"
+                            class="btn btn-primary p-2"
+                          >
+                            See Details
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <% }); %> <% } else { %>
+              <div class="text-center py-5">
+                <p class="text-muted">
+                  This guide hasn't created any tours yet.
+                </p>
+              </div>
+              <% } %>
+
+              <!-- Pagination -->
+              <% if (pagination && pagination.totalPages > 1) { %>
+              <div class="d-flex justify-content-center mt-4">
+                <nav aria-label="Tour pagination">
+                  <ul class="pagination">
+                    <!-- Previous Button -->
+                    <li
+                      class="page-item <%= !pagination.hasPrev ? 'disabled' : '' %>"
+                    >
+                      <% if (pagination.hasPrev) { %>
+                      <a
+                        class="page-link"
+                        href="?page=<%= pagination.prevPage %>"
+                        aria-label="Previous"
+                      >
+                        <span aria-hidden="true">Prev</span>
+                      </a>
+                      <% } else { %>
+                      <span class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">Prev</span>
+                      </span>
+                      <% } %>
+                    </li>
+
+                    <!-- Page Numbers -->
+                    <% const startPage = Math.max(1, pagination.currentPage -
+                    2); const endPage = Math.min(pagination.totalPages,
+                    pagination.currentPage + 2); %>
+
+                    <!-- First page if not in visible range -->
+                    <% if (startPage > 1) { %>
+                    <li class="page-item">
+                      <a class="page-link" href="?page=1">1</a>
+                    </li>
+                    <% if (startPage > 2) { %>
+                    <li class="page-item disabled">
+                      <span class="page-link">...</span>
+                    </li>
+                    <% } %> <% } %>
+
+                    <!-- Visible page range -->
+                    <% for (let i = startPage; i <= endPage; i++) { %>
+                    <li
+                      class="page-item <%= i === pagination.currentPage ? 'active' : '' %>"
+                    >
+                      <% if (i === pagination.currentPage) { %>
+                      <span class="page-link"><%= i %></span>
+                      <% } else { %>
+                      <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                      <% } %>
+                    </li>
+                    <% } %>
+
+                    <!-- Last page if not in visible range -->
+                    <% if (endPage < pagination.totalPages) { %> <% if (endPage
+                    < pagination.totalPages - 1) { %>
+                    <li class="page-item disabled">
+                      <span class="page-link">...</span>
+                    </li>
+                    <% } %>
+                    <li class="page-item">
+                      <a
+                        class="page-link"
+                        href="?page=<%= pagination.totalPages %>"
+                        ><%= pagination.totalPages %></a
+                      >
+                    </li>
+                    <% } %>
+
+                    <!-- Next Button -->
+                    <li
+                      class="page-item <%= !pagination.hasNext ? 'disabled' : '' %>"
+                    >
+                      <% if (pagination.hasNext) { %>
+                      <a
+                        class="page-link"
+                        href="?page=<%= pagination.nextPage %>"
+                        aria-label="Next"
+                      >
+                        <span aria-hidden="true">Next</span>
+                      </a>
+                      <% } else { %>
+                      <span class="page-link" aria-label="Next">
+                        <span aria-hidden="true">Next</span>
+                      </span>
+                      <% } %>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <%- include('../../partials/footer') %>
+  </body>
+</html>

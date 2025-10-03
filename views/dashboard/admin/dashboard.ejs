@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administration Dashboard</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+      />
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/theme-loader.js"></script>
+  </head>
+  <body class="<%= user?.theme || 'light' %>">
+  <%- include('../../partials/navbar') %>
+  <div class="dashboard-header">
+    <h1 class="h3 mb-1 fw-bold">Administration Dashboard</h1>
+    <p class="mb-0 text-muted">Hello, <%= user.profileInfo?.firstName || 'Admin' %>!</p>
+  </div>
+  <div class="container-fluid p-4">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h5 class="mb-3 fw-semibold">Overview</h5>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <div class="overview-card">
+              <i class="fas fa-arrow-up text-success mb-2"></i>
+              <h6 class="mb-1">Total Posts - Daily</h6>
+              <h4 class="mb-0"><%= (stats?.posts?.last7Days || 0) %>+ Posts</h4>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="overview-card">
+              <i class="fas fa-id-card text-warning mb-2"></i>
+              <h6 class="mb-1">Pending Certificates</h6>
+              <h4 class="mb-0"><%= (stats?.certificates?.pending || 0) %> Pending</h4>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="overview-card">
+              <i class="fas fa-users text-primary mb-2"></i>
+              <h6 class="mb-1">Total Members</h6>
+              <h4 class="mb-0"><%= (stats?.totals?.users || 0) + (stats?.totals?.tourguides || 0) %> Members</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="detailed-info">
+      <ul class="nav nav-tabs px-4 pt-3" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">
+            Users & Members
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="certificates-tab" data-bs-toggle="tab" data-bs-target="#certificates" type="button" role="tab">
+            Certificate Verification
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button" role="tab">
+            Content Moderation
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content" id="adminTabContent">
+        <div class="tab-pane fade show active" id="users" role="tabpanel">
+          <div class="p-4">
+            <h5 class="mb-3 fw-semibold">Users & Members</h5>    
+            <div class="row">
+              <div class="col-md-3">
+                <div class="filter-panel">
+                  <h6 class="fw-semibold mb-3">Filter</h6>
+                  <div class="filter-section">
+                    <h6>Roles</h6>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="guides" checked>
+                      <label class="form-check-label" for="guides">Guides</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="travelers">
+                      <label class="form-check-label" for="travelers">Users</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="mods">
+                      <label class="form-check-label" for="mods">Mods/Admin</label>
+                    </div>
+                  </div>
+                  <div class="filter-section">
+                    <h6>Number of Report</h6>
+                    <div class="form-check">
+                       <input class="form-check-input" type="radio" name="report-sort" id="ascending" value="ascending">
+                      <label class="form-check-label" for="ascending">Ascending</label>
+                    </div>
+                    <div class="form-check">
+                       <input class="form-check-input" type="radio" name="report-sort" id="descending" value="descending">
+                      <label class="form-check-label" for="descending">Descending</label>
+                    </div>
+                  </div>
+                  <div class="filter-section">
+                    <h6>Active Time</h6>
+                    <div class="form-check">
+                       <input class="form-check-input" type="radio" name="time-sort" id="latest" value="latest">
+                      <label class="form-check-label" for="latest">Latest</label>
+                    </div>
+                    <div class="form-check">
+                       <input class="form-check-input" type="radio" name="time-sort" id="oldest" value="oldest">
+                      <label class="form-check-label" for="oldest">Oldest</label>
+                    </div>
+                  </div>
+                  <div class="filter-section">
+                    <h6>Name</h6>
+                    <div class="form-check">
+                       <input class="form-check-input" type="radio" name="name-sort" id="name-asc" value="name-asc">
+                      <label class="form-check-label" for="name-asc">Ascending (a-z)</label>
+                    </div>
+                    <div class="form-check">
+                       <input class="form-check-input" type="radio" name="name-sort" id="name-desc" value="name-desc">
+                      <label class="form-check-label" for="name-desc">Descending (z-a)</label>
+                    </div>
+                  </div>
+                  <div class="d-grid gap-2 mt-4">
+                    <button class="btn btn-outline-secondary btn-sm" id="userResetBtn">Reset</button>
+                    <button class="btn btn-success btn-sm" id="userApplyBtn">Apply</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div class="mb-3">
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" placeholder="Search">
+                  </div>
+                </div>
+                <div class="stats-bar">
+                  <div class="row text-center">
+                    <div class="col">
+                      <strong>Total: <%= (stats?.totals?.users || 0) + (stats?.totals?.tourguides || 0) %></strong>
+                    </div>
+                    <div class="col">
+                      <strong>Guides: <%= stats?.totals?.tourguides || 0 %></strong>
+                    </div>
+                    <div class="col">
+                      <strong>Banned: <%= stats?.totals?.locked || 0 %></strong>
+                    </div>
+                    <div class="col">
+                      <strong>Mods: <%= stats?.totals?.admins || 0 %></strong>
+                    </div>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <div id="bulkToolbar" class="d-flex gap-2 mb-2 bulk-toolbar">
+                    <button id="bulkBanToggle" class="btn btn-sm btn-success" data-bulk="ban-toggle"><i class="bi bi-octagon-fill me-1"></i><span class="label">Ban</span></button>
+                    <button id="bulkFlagToggle" class="btn btn-sm btn-warning" data-bulk="flag-toggle"><i class="bi bi-flag-fill me-1"></i><span class="label">Flag</span></button>
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-gear me-1"></i>Change role
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" data-bulk="role" data-role="tourguide">Guide</a></li>
+                        <li><a class="dropdown-item" href="#" data-bulk="role" data-role="user">User</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <table class="table table-hover user-table">
+                    <thead>
+                      <tr>
+                        <th><input type="checkbox" id="selectAll" class="form-check-input"></th>
+                        <th>User</th>
+                        <th>Role</th>
+                         <th class="status-column">Status</th>
+                        <th>Last Active</th>
+                        <th>Reports</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                                          <tbody id="usersTableBody">
+                      </tbody>
+                  </table>
+                </div>
+                <nav aria-label="User pagination">
+                  <ul class="pagination justify-content-center">
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="certificates" role="tabpanel">
+          <div class="p-4">
+            <h5 class="mb-3 fw-semibold">Certificate Verification</h5>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="filter-panel">
+                  <h6 class="fw-semibold mb-3">Filter</h6>
+                  <div class="filter-section">
+                    <h6>Status</h6>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="cert-status" id="cert-all" value="all" checked>
+                      <label class="form-check-label" for="cert-all">All</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="cert-status" id="cert-pending" value="pending">
+                      <label class="form-check-label" for="cert-pending">Pending</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="cert-status" id="cert-approved" value="approved">
+                      <label class="form-check-label" for="cert-approved">Approved</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="cert-status" id="cert-rejected" value="rejected">
+                      <label class="form-check-label" for="cert-rejected">Rejected</label>
+                    </div>
+                  </div>
+                  <div class="filter-section">
+                    <h6>Sort By</h6>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="cert-sort" id="sort-date-desc" value="date-desc" checked>
+                      <label class="form-check-label" for="sort-date-desc">Newest First</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="cert-sort" id="sort-date-asc" value="date-asc">
+                      <label class="form-check-label" for="sort-date-asc">Oldest First</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="cert-sort" id="sort-name-asc" value="name-asc">
+                      <label class="form-check-label" for="sort-name-asc">Name A-Z</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="cert-sort" id="sort-name-desc" value="name-desc">
+                      <label class="form-check-label" for="sort-name-desc">Name Z-A</label>
+                    </div>
+                     <div class="form-check">
+                       <input class="form-check-input" type="radio" name="cert-sort" id="sort-status" value="status">
+                       <label class="form-check-label" for="sort-status">Status</label>
+                     </div>
+                   </div>
+                   <div class="d-grid gap-2 mt-4">
+                     <button type="button" class="btn btn-outline-secondary btn-sm" id="certResetBtn">Reset</button>
+                     <button type="button" class="btn btn-success btn-sm" id="certApplyBtn">Apply</button>
+                   </div>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div class="stats-bar mb-3" id="certStatsBar">
+                  <div class="row text-center">
+                    <div class="col"><strong>Total: 0</strong></div>
+                    <div class="col"><strong>Pending: 0</strong></div>
+                    <div class="col"><strong>Approved: 0</strong></div>
+                    <div class="col"><strong>Rejected: 0</strong></div>
+                  </div>
+                </div>
+                <div class="table-responsive table-responsive-wrap">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Guide</th>
+                        <th>Photo</th>
+                        <th>Upload Date</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="certTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Moderation Tab -->
+        <div class="tab-pane fade" id="content" role="tabpanel">
+          <div class="p-4">
+            <h5 class="mb-3 fw-semibold">Content Moderation</h5>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="filter-panel">
+                  <h6 class="fw-semibold mb-3">Filter</h6>
+                  
+                  <div class="filter-section">
+                    <h6>Sort By</h6>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="content-sort" id="content-date-desc" value="date-desc" checked>
+                      <label class="form-check-label" for="content-date-desc">Newest First</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="content-sort" id="content-date-asc" value="date-asc">
+                      <label class="form-check-label" for="content-date-asc">Oldest First</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="content-sort" id="content-author-asc" value="author-asc">
+                      <label class="form-check-label" for="content-author-asc">Author A-Z</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="content-sort" id="content-author-desc" value="author-desc">
+                      <label class="form-check-label" for="content-author-desc">Author Z-A</label>
+                    </div>
+                  </div>
+                  <div class="d-grid gap-2 mt-4">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="contentResetBtn">Reset</button>
+                    <button type="button" class="btn btn-success btn-sm" id="contentApplyBtn">Apply</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div class="stats-bar mb-3" id="contentStatsBar">
+                  <div class="row text-center">
+                    <div class="col"><strong>Total: 0</strong></div>
+                    <div class="col"><strong>Threads: 0</strong></div>
+                    <div class="col"><strong>Posts: 0</strong></div>
+                    <div class="col"><strong>Hidden: 0</strong></div>
+                  </div>
+                </div>
+                <div class="table-responsive table-responsive-wrap">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Author</th>
+                        <th>Uploaded</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="contentTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Certificate Modal -->
+  <div class="modal fade" id="certificateModal" tabindex="-1" aria-labelledby="certificateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content modal-content-theme">
+        <div class="modal-header modal-header-theme">
+          <h5 class="modal-title" id="certificateModalLabel">Certificate View</h5>
+          <button type="button" class="btn-close btn-close-theme" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <img id="certificateImage" src="" alt="Certificate" class="img-fluid certificate-image">
+        </div>
+        <div class="modal-footer modal-footer-theme">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="downloadCertificate">
+            <i class="fas fa-download me-2"></i>Download
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thread View Modal (reuse certificate modal style) -->
+  <div class="modal fade" id="threadViewModal" tabindex="-1" aria-labelledby="threadViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content modal-content-theme">
+        <div class="modal-header modal-header-theme">
+          <h5 class="modal-title" id="threadViewModalLabel">Thread Detail</h5>
+          <button type="button" class="btn-close btn-close-theme" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h4 id="threadViewTitle" class="mb-3"></h4>
+          <div id="threadViewContent" class="thread-content"></div>
+          <div id="threadViewImages" class="mt-3"></div>
+        </div>
+        <div class="modal-footer modal-footer-theme">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thread Image Modal (separate from certificate modal) -->
+  <div class="modal fade" id="threadImageModal" tabindex="-1" aria-labelledby="threadImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content modal-content-theme">
+        <div class="modal-header modal-header-theme">
+          <h5 class="modal-title" id="threadImageModalLabel">Thread Image</h5>
+          <button type="button" class="btn-close btn-close-theme" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <img id="threadImage" src="" alt="thread attachment" class="img-fluid thread-image">
+        </div>
+        <div class="modal-footer modal-footer-theme">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rejection Reason Modal -->
+  <div class="modal fade" id="rejectionModal" tabindex="-1" aria-labelledby="rejectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal-content-theme">
+        <div class="modal-header modal-header-theme">
+          <h5 class="modal-title" id="rejectionModalLabel">
+            <i class="fas fa-times-circle text-danger me-2"></i>Reject Certificate
+          </h5>
+          <button type="button" class="btn-close btn-close-theme" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-3">Please provide a reason for rejecting this certificate:</p>
+          <div class="form-group">
+            <label for="rejectionReason" class="form-label">Rejection Reason</label>
+            <textarea class="form-control textarea-theme" id="rejectionReason" rows="4" 
+                      placeholder="Enter the reason for rejection..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer modal-footer-theme">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmRejection">
+            <i class="fas fa-times me-2"></i>Reject Certificate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../../partials/footer') %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    let allUsers = [];
+    let filteredUsers = [];
+    let currentPage = 1;
+    const usersPerPage = 10;
+
+    // Load users data via API
+    async function loadUsers() {
+      try {
+        const response = await fetch('/admin/users');
+        const data = await response.json();
+        
+        if (data.success) {
+          allUsers = data.data.items;
+          filteredUsers = [...allUsers];
+          updateUsersTable();
+          updatePagination();
+        }
+      } catch (error) {
+        console.error('Error loading users:', error);
+      }
+    }
+
+    function updateUsersTable() {
+      const tbody = document.getElementById('usersTableBody');
+      tbody.innerHTML = '';
+      
+      const startIndex = (currentPage - 1) * usersPerPage;
+      const endIndex = startIndex + usersPerPage;
+      const pageUsers = filteredUsers.slice(startIndex, endIndex);
+      
+      pageUsers.forEach(user => {
+        // Exclude current admin from actions
+        if ('<%= (user && user._id) ? user._id.toString() : "" %>' === String(user._id)) return;
+        const row = document.createElement('tr');
+        const roleClass = (user.role === 'admin') ? 'role-admin' : (user.role === 'tourguide' ? 'role-guide' : 'role-user');
+        const roleText = user.role === 'admin' ? 'Admin' : (user.role === 'tourguide' ? 'Guide' : 'User');
+        
+        const fullName = `${user.profileInfo?.firstName || 'User'} ${user.profileInfo?.lastName || ''}`.trim();
+        
+        const profilePicture = user.profileInfo?.profilePhoto && user.profileInfo.profilePhoto !== 'defaultAvatar.png'
+          ? `/uploads/profilePicture/${user.profileInfo.profilePhoto}`
+          : '/img/defaultAvatar.png';
+          
+        const statusTexts = [];
+        if (user.isLocked) statusTexts.push('<span class="text-danger">Banned</span>');
+        if (user.isActive === false) statusTexts.push('<span class="text-secondary">Deactivated</span>');
+        if (!user.isLocked && user.isActive !== false) statusTexts.push('<span class="text-success">Active</span>');
+         const statusBadge = `<div class="d-flex flex-column gap-1">${statusTexts.join('')}</div>`;
+        row.innerHTML = `
+           <td class="align-middle"><input type="checkbox" class="form-check-input row-check" data-user-id="${user._id}"></td>
+           <td class="align-middle">
+            <div class="d-flex align-items-center">
+              <div class="user-avatar">
+                 <img src="${profilePicture}" alt="${fullName}" onerror="this.src='/img/defaultAvatar.png'">
+              </div>
+              <span class="user-name" data-user-id="${user._id}">${fullName}</span>
+              <span class="ms-2 text-danger flag-icon ${user.isFlagged ? 'show' : ''}" title="Flagged">
+                <i class="fas fa-flag"></i>
+              </span>
+               <span class="ms-2 text-danger banned-icon" title="Banned">
+                <i class="bi bi-octagon-fill"></i>
+              </span>
+            </div>
+          </td>
+           <td class="align-middle"><span class="role-badge ${roleClass}">${roleText}</span></td>
+          <td class="align-middle">${statusBadge}</td>
+          <td class="align-middle">${new Date(user.lastLogin || user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</td>
+          <td class="align-middle">0</td>
+          <td class="align-middle">
+            <div class="dropdown">
+              <button class="btn btn-link p-0 text-decoration-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" data-user-id="${user._id}">
+                <li><a class="dropdown-item action-ban" href="#">${user.isLocked ? 'Unban member' : 'Ban member'}</a></li>
+                <li><a class="dropdown-item action-flag" href="#">${user.isFlagged ? 'Unflag user' : 'Flag user'}</a></li>
+              </ul>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      bindRowEvents();
+    }
+
+    function updatePagination() {
+      const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+      const pagination = document.querySelector('.pagination');
+      
+      let paginationHTML = `
+        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+          <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Prev</a>
+        </li>
+      `;
+      
+      for (let i = 1; i <= totalPages; i++) {
+        paginationHTML += `
+          <li class="page-item ${i === currentPage ? 'active' : ''}">
+            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+          </li>
+        `;
+      }
+      
+      paginationHTML += `
+        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+          <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Next</a>
+        </li>
+      `;
+      
+      pagination.innerHTML = paginationHTML;
+    }
+
+    function changePage(page) {
+      const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+      if (page >= 1 && page <= totalPages) {
+        currentPage = page;
+        updateUsersTable();
+        updatePagination();
+      }
+    }
+    function searchUsers() {
+      const searchTerm = document.querySelector('input[placeholder="Search"]').value.toLowerCase();
+      
+      filteredUsers = allUsers.filter(user => {
+        const fullName = `${user.profileInfo?.firstName || ''} ${user.profileInfo?.lastName || ''}`.toLowerCase();
+        const email = user.email.toLowerCase();
+        return fullName.includes(searchTerm) || email.includes(searchTerm);
+      });
+      
+      currentPage = 1;
+      updateUsersTable();
+      updatePagination();
+    }
+    function applyFilters() {
+      const roleFilters = {
+        guides: document.getElementById('guides').checked,
+        travelers: document.getElementById('travelers').checked,
+        mods: document.getElementById('mods').checked
+      };
+      
+       const reportSort = document.querySelector('input[name="report-sort"]:checked')?.value;
+       const timeSort = document.querySelector('input[name="time-sort"]:checked')?.value;
+       const nameSort = document.querySelector('input[name="name-sort"]:checked')?.value;
+      filteredUsers = allUsers.filter(user => {
+        if (user.role === 'tourguide' && roleFilters.guides) return true;
+        if (user.role === 'user' && roleFilters.travelers) return true;
+        if (user.role === 'admin' && roleFilters.mods) return true;
+        return false;
+      });
+       if (nameSort === 'name-asc') {
+        filteredUsers.sort((a, b) => {
+          const nameA = `${a.profileInfo?.firstName || ''} ${a.profileInfo?.lastName || ''}`.toLowerCase();
+          const nameB = `${b.profileInfo?.firstName || ''} ${b.profileInfo?.lastName || ''}`.toLowerCase();
+          return nameA.localeCompare(nameB);
+        });
+       } else if (nameSort === 'name-desc') {
+        filteredUsers.sort((a, b) => {
+          const nameA = `${a.profileInfo?.firstName || ''} ${a.profileInfo?.lastName || ''}`.toLowerCase();
+          const nameB = `${b.profileInfo?.firstName || ''} ${b.profileInfo?.lastName || ''}`.toLowerCase();
+          return nameB.localeCompare(nameA);
+        });
+      }
+       if (timeSort === 'latest') {
+        filteredUsers.sort((a, b) => new Date(b.lastLogin || b.createdAt) - new Date(a.lastLogin || a.createdAt));
+       } else if (timeSort === 'oldest') {
+        filteredUsers.sort((a, b) => new Date(a.lastLogin || a.createdAt) - new Date(b.lastLogin || b.createdAt));
+      }
+      
+      currentPage = 1;
+      updateUsersTable();
+      updatePagination();
+    }
+
+    function resetFilters() {
+      document.getElementById('guides').checked = true;
+      document.getElementById('travelers').checked = true;
+      document.getElementById('mods').checked = true;
+       // Reset radio buttons - no selection
+       document.querySelectorAll('input[name="report-sort"]').forEach(radio => radio.checked = false);
+       document.querySelectorAll('input[name="time-sort"]').forEach(radio => radio.checked = false);
+       document.querySelectorAll('input[name="name-sort"]').forEach(radio => radio.checked = false);
+      document.querySelector('input[placeholder="Search"]').value = '';
+      
+      filteredUsers = [...allUsers];
+      currentPage = 1;
+      updateUsersTable();
+      updatePagination();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadUsers();
+      document.querySelector('input[placeholder="Search"]').addEventListener('input', searchUsers);
+      // Scope Users & Members buttons only
+      const userApplyBtn = document.getElementById('userApplyBtn');
+      const userResetBtn = document.getElementById('userResetBtn');
+      if (userApplyBtn) userApplyBtn.addEventListener('click', function(e){ e.preventDefault(); applyFilters(); });
+      if (userResetBtn) userResetBtn.addEventListener('click', function(e){ e.preventDefault(); resetFilters(); });
+      // Select all
+      document.getElementById('selectAll').addEventListener('change', function() {
+        const checked = this.checked;
+        document.querySelectorAll('.row-check').forEach(cb => { cb.checked = checked; });
+      });
+      // Do not auto-apply user filters; Apply button triggers filtering
+      
+      // Certificates tab events (manual apply via buttons)
+      const certTab = document.getElementById('certificates-tab');
+      if (certTab) {
+        certTab.addEventListener('shown.bs.tab', loadCertificates);
+      }
+
+      // Content tab events (manual apply via buttons)
+      const contentTab = document.getElementById('content-tab');
+      if (contentTab) {
+        contentTab.addEventListener('shown.bs.tab', loadContent);
+      }
+
+      // Certificate filter buttons
+      const certResetBtn = document.getElementById('certResetBtn');
+      const certApplyBtn = document.getElementById('certApplyBtn');
+      if (certResetBtn) certResetBtn.addEventListener('click', function(e){ e.preventDefault(); resetCertFilters(); });
+      if (certApplyBtn) certApplyBtn.addEventListener('click', function(e){ e.preventDefault(); applyCertFilters(); });
+
+      // Content filter buttons
+      const contentResetBtn = document.getElementById('contentResetBtn');
+      const contentApplyBtn = document.getElementById('contentApplyBtn');
+      if (contentResetBtn) contentResetBtn.addEventListener('click', function(e){ e.preventDefault(); resetContentFilters(); });
+      if (contentApplyBtn) contentApplyBtn.addEventListener('click', function(e){ e.preventDefault(); applyContentFilters(); });
+    });
+
+    function bindRowEvents() {
+      // Rebind selectAll to new rows
+      const selectAll = document.getElementById('selectAll');
+      if (selectAll) {
+        selectAll.indeterminate = false;
+        const rowChecks = document.querySelectorAll('.row-check');
+        rowChecks.forEach(cb => {
+          cb.addEventListener('change', () => {
+            const all = Array.from(document.querySelectorAll('.row-check'));
+            const allChecked = all.every(x => x.checked);
+            const noneChecked = all.every(x => !x.checked);
+            selectAll.checked = allChecked;
+            selectAll.indeterminate = !allChecked && !noneChecked;
+            toggleBulkToolbar();
+          });
+        });
+      }
+
+      // Actions: Ban and Flag
+      document.querySelectorAll('.dropdown-menu .action-ban').forEach(el => {
+        el.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const userId = e.currentTarget.closest('.dropdown-menu').getAttribute('data-user-id');
+          const nameSpan = document.querySelector(`.user-name[data-user-id="${userId}"]`);
+          const bannedIcon = nameSpan?.parentElement.querySelector('.banned-icon');
+          const statusCell = nameSpan?.closest('tr')?.children[3];
+          const currentlyBanned = statusCell && statusCell.textContent.toLowerCase().includes('banned');
+          const endpoint = currentlyBanned ? `/admin/users/${userId}/unban` : `/admin/users/${userId}/ban`;
+          try {
+            const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+            const data = await res.json();
+            if (data.success) {
+              if (bannedIcon) {
+                const nowBanned = !currentlyBanned;
+                bannedIcon.style.display = 'none';
+                // Update status cell
+                const statusCell = nameSpan?.closest('tr')?.children[3];
+                if (statusCell) {
+                  const deactivated = statusCell.innerHTML.includes('Deactivated');
+                  const statusTexts = [];
+                  if (nowBanned) statusTexts.push('<span class="text-danger">Banned</span>');
+                  if (deactivated) statusTexts.push('<span class="text-secondary">Deactivated</span>');
+                  if (!nowBanned && !deactivated) statusTexts.push('<span class="text-success">Active</span>');
+                   statusCell.innerHTML = `<div class="d-flex flex-column gap-1">${statusTexts.join('')}</div>`;
+                }
+                // Update menu text
+                const menu = e.currentTarget.closest('.dropdown-menu');
+                const banItem = menu.querySelector('.action-ban');
+                if (banItem) banItem.textContent = nowBanned ? 'Unban member' : 'Ban member';
+              }
+              updateBulkToggleLabels();
+            } else {
+              alert(data.message || 'Failed to ban');
+            }
+          } catch (err) {
+            console.error(err);
+          }
+        });
+      });
+
+      document.querySelectorAll('.dropdown-menu .action-flag').forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          const menu = e.currentTarget.closest('.dropdown-menu');
+          const userId = menu.getAttribute('data-user-id');
+          const nameSpan = document.querySelector(`.user-name[data-user-id="${userId}"]`);
+          if (!nameSpan) return;
+          const flagIcon = nameSpan.parentElement.querySelector('.flag-icon');
+          const willFlag = !(flagIcon && flagIcon.style.display !== 'none');
+          fetch(`/admin/users/${userId}/flag`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ flag: willFlag })
+          }).then(r => r.json()).then(data => {
+            if (data.success) {
+              if (flagIcon) {
+                flagIcon.style.display = willFlag ? 'inline-block' : 'none';
+              }
+              // Update menu text
+              const flagItem = menu.querySelector('.action-flag');
+              if (flagItem) flagItem.textContent = willFlag ? 'Unflag user' : 'Flag user';
+              updateBulkToggleLabels();
+            } else {
+              alert(data.message || 'Failed to update flag');
+            }
+          }).catch(err => console.error(err));
+        });
+      });
+
+      // Bulk toolbar handlers
+      const toolbar = document.getElementById('bulkToolbar');
+      if (toolbar) {
+        toolbar.querySelectorAll('button[data-bulk], a[data-bulk="role"]').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const action = btn.getAttribute('data-bulk');
+            const ids = Array.from(document.querySelectorAll('.row-check:checked')).map(cb => cb.getAttribute('data-user-id'));
+            if (ids.length === 0) return;
+            let endpoint = '';
+            let payload = { userIds: ids };
+            if (action === 'ban-toggle') {
+              // If any selected user is not banned → Ban, else Unban all
+              const anyNotBanned = Array.from(document.querySelectorAll('.row-check:checked')).some(cb => {
+                const id = cb.getAttribute('data-user-id');
+                const nameSpan = document.querySelector(`.user-name[data-user-id="${id}"]`);
+                const statusCell = nameSpan?.closest('tr')?.children[3];
+                const isBanned = statusCell && statusCell.textContent.toLowerCase().includes('banned');
+                return !isBanned;
+              });
+              endpoint = anyNotBanned ? '/admin/users/bulk-ban' : '/admin/users/bulk-unban';
+              const label = toolbar.querySelector('#bulkBanToggle .label');
+              if (label) label.textContent = anyNotBanned ? 'Ban' : 'Unban';
+            }
+            if (action === 'flag-toggle') {
+              // If any selected user is not flagged → Flag, else Unflag all
+              const anyNotFlagged = Array.from(document.querySelectorAll('.row-check:checked')).some(cb => {
+                const id = cb.getAttribute('data-user-id');
+                const nameSpan = document.querySelector(`.user-name[data-user-id="${id}"]`);
+                const flagIcon = nameSpan?.parentElement.querySelector('.flag-icon');
+                const isFlagged = flagIcon && flagIcon.style.display !== 'none';
+                return !isFlagged;
+              });
+              endpoint = anyNotFlagged ? '/admin/users/bulk-flag' : '/admin/users/bulk-unflag';
+              const label = toolbar.querySelector('#bulkFlagToggle .label');
+              if (label) label.textContent = anyNotFlagged ? 'Flag' : 'Unflag';
+            }
+            if (action === 'role') { endpoint = '/admin/users/bulk-role'; payload.role = btn.getAttribute('data-role'); }
+            try {
+              const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+              const j = await r.json();
+              if (j.success) {
+                // Optimistic UI update for instant feedback
+                if (endpoint.endsWith('/bulk-ban')) setBannedStateForIds(ids, true);
+                if (endpoint.endsWith('/bulk-unban')) setBannedStateForIds(ids, false);
+                if (endpoint.endsWith('/bulk-flag')) setFlaggedStateForIds(ids, true);
+                if (endpoint.endsWith('/bulk-unflag')) setFlaggedStateForIds(ids, false);
+                if (endpoint.includes('bulk-role')) setRoleForIds(ids, payload.role);
+                updateBulkToggleLabels();
+                showToast(`${j.updated} users updated${j.skipped ? `, ${j.skipped} skipped` : ''}`);
+              } else { showToast(j.message || 'Bulk action failed', true); }
+            } catch (err) { showToast('Bulk action error', true); }
+          });
+        });
+      }
+    }
+
+    function toggleBulkToolbar() {
+      const toolbar = document.getElementById('bulkToolbar');
+      if (!toolbar) return;
+      const anyChecked = Array.from(document.querySelectorAll('.row-check')).some(cb => cb.checked);
+      toolbar.style.display = anyChecked ? 'flex' : 'none';
+      // debounce to ensure DOM updated first
+      if (anyChecked) setTimeout(updateBulkToggleLabels, 0);
+    }
+
+    function showToast(msg, isError = false) {
+      const n = document.createElement('div');
+      n.className = `notification ${isError ? 'error' : 'success'}`;
+      n.textContent = msg;
+      document.body.appendChild(n);
+      setTimeout(() => n.classList.add('show'), 50);
+      setTimeout(() => { n.classList.remove('show'); setTimeout(() => n.remove(), 300); }, 3000);
+    }
+
+    function updateBulkToggleLabels() {
+      const toolbar = document.getElementById('bulkToolbar');
+      if (!toolbar) return;
+      const selected = Array.from(document.querySelectorAll('.row-check:checked'));
+      const allBanned = selected.length > 0 && selected.every(cb => {
+        const id = cb.getAttribute('data-user-id');
+        const nameSpan = document.querySelector(`.user-name[data-user-id="${id}"]`);
+        const statusCell = nameSpan?.closest('tr')?.children[3];
+        const isBanned = statusCell && statusCell.textContent.toLowerCase().includes('banned');
+        return isBanned;
+      });
+      const anyNotFlagged = selected.some(cb => {
+        const id = cb.getAttribute('data-user-id');
+        const nameSpan = document.querySelector(`.user-name[data-user-id="${id}"]`);
+        const flagIcon = nameSpan?.parentElement.querySelector('.flag-icon');
+        const isFlagged = flagIcon && flagIcon.style.display !== 'none';
+        return !isFlagged;
+      });
+      const banLabel = toolbar.querySelector('#bulkBanToggle .label');
+      const flagLabel = toolbar.querySelector('#bulkFlagToggle .label');
+      if (banLabel) banLabel.textContent = allBanned ? 'Unban' : 'Ban';
+      if (flagLabel) flagLabel.textContent = anyNotFlagged ? 'Flag' : 'Unflag';
+    }
+
+    function setBannedStateForIds(ids, state) {
+      ids.forEach(id => {
+        const nameSpan = document.querySelector(`.user-name[data-user-id="${id}"]`);
+        const bannedIcon = nameSpan?.parentElement.querySelector('.banned-icon');
+        if (bannedIcon) bannedIcon.style.display = 'none';
+        const statusCell = nameSpan?.closest('tr')?.children[3];
+        if (statusCell) {
+          const deactivated = statusCell.innerHTML.includes('Deactivated');
+          const statusTexts = [];
+          if (state) statusTexts.push('<span class="text-danger">Banned</span>');
+          if (deactivated) statusTexts.push('<span class="text-secondary">Deactivated</span>');
+          if (!state && !deactivated) statusTexts.push('<span class="text-success">Active</span>');
+                   statusCell.innerHTML = `<div class="d-flex flex-column gap-1">${statusTexts.join('')}</div>`;
+        }
+        const menu = document.querySelector(`.dropdown-menu[data-user-id="${id}"] .action-ban`);
+        if (menu) menu.textContent = state ? 'Unban member' : 'Ban member';
+      });
+    }
+
+    function setFlaggedStateForIds(ids, state) {
+      ids.forEach(id => {
+        const nameSpan = document.querySelector(`.user-name[data-user-id="${id}"]`);
+        const flagIcon = nameSpan?.parentElement.querySelector('.flag-icon');
+        if (flagIcon) flagIcon.style.display = state ? 'inline-block' : 'none';
+        const menu = document.querySelector(`.dropdown-menu[data-user-id="${id}"] .action-flag`);
+        if (menu) menu.textContent = state ? 'Unflag user' : 'Flag user';
+      });
+    }
+
+    function setRoleForIds(ids, role) {
+      ids.forEach(id => {
+        const nameSpan = document.querySelector(`.user-name[data-user-id="${id}"]`);
+        const row = nameSpan?.closest('tr');
+        if (!row) return;
+         const roleCell = row.children[2];
+         if (roleCell) {
+           const text = role === 'tourguide' ? 'Guide' : 'User';
+           const className = role === 'tourguide' ? 'role-guide' : 'role-user';
+           roleCell.innerHTML = `<span class="role-badge ${className}">${text}</span>`;
+           roleCell.className = 'align-middle';
+         }
+      });
+    }
+
+    async function loadCertificates() {
+      const statusChecked = document.querySelector('input[name="cert-status"]:checked');
+      const sortChecked = document.querySelector('input[name="cert-sort"]:checked');
+      const status = statusChecked ? statusChecked.value : 'all';
+      const sortBy = sortChecked ? sortChecked.value : 'date-desc';
+      const tbody = document.getElementById('certTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      try {
+        const res = await fetch(`/admin/certificates?status=${status}`);
+        const data = await res.json();
+        if (!data.success) return;
+        const users = data.data.items || [];
+        
+        // Collect all certificates with their data
+        let allCertificates = [];
+        users.forEach(u => {
+          const fullName = `${u.profileInfo?.firstName || ''} ${u.profileInfo?.lastName || ''}`.trim();
+          (u.guideInfo?.certifications || []).forEach(cert => {
+            // Handle certificate image path more consistently
+            let certImagePath = '/img/defaultAvatar.png';
+            if (cert.verificationPhoto) {
+              console.log('Certificate verificationPhoto:', cert.verificationPhoto);
+              if (cert.verificationPhoto.startsWith('http')) {
+                certImagePath = cert.verificationPhoto;
+              } else if (cert.verificationPhoto.startsWith('/')) {
+                certImagePath = cert.verificationPhoto;
+              } else {
+                certImagePath = `/uploads/certification/${cert.verificationPhoto}`;
+              }
+              console.log('Final certImagePath:', certImagePath);
+            }
+              
+            // Determine best available upload date
+            const uploadDate = cert.createdAt || cert.verifiedAt || cert.rejection?.at || u.lastLogin || u.createdAt;
+            const formattedDate = uploadDate ? new Date(uploadDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+            
+            // Determine certificate status
+            const isVerified = cert.isVerified === true;
+            const isRejected = cert.rejection && cert.rejection.reason;
+            const certStatus = isVerified ? 'approved' : (isRejected ? 'rejected' : 'pending');
+            
+            allCertificates.push({
+              user: u,
+              cert: cert,
+              fullName: fullName,
+              certImagePath: certImagePath,
+              uploadDate: uploadDate,
+              formattedDate: formattedDate,
+              status: certStatus
+            });
+          });
+        });
+        
+        // Apply sorting
+        allCertificates.sort((a, b) => {
+          switch(sortBy) {
+            case 'date-desc':
+              return new Date(b.uploadDate || 0) - new Date(a.uploadDate || 0);
+            case 'date-asc':
+              return new Date(a.uploadDate || 0) - new Date(b.uploadDate || 0);
+            case 'name-asc':
+              return a.fullName.localeCompare(b.fullName);
+            case 'name-desc':
+              return b.fullName.localeCompare(a.fullName);
+            case 'status':
+              const statusOrder = { 'pending': 0, 'approved': 1, 'rejected': 2 };
+              return statusOrder[a.status] - statusOrder[b.status];
+            default:
+              return 0;
+          }
+        });
+        
+        // Update stats bar for certificates
+        const certTotals = {
+          total: allCertificates.length,
+          pending: allCertificates.filter(c => c.status === 'pending').length,
+          approved: allCertificates.filter(c => c.status === 'approved').length,
+          rejected: allCertificates.filter(c => c.status === 'rejected').length
+        };
+        const certStatsBar = document.getElementById('certStatsBar');
+        if (certStatsBar) {
+          certStatsBar.innerHTML = `
+            <div class="row text-center">
+              <div class="col"><strong>Total: ${certTotals.total}</strong></div>
+              <div class="col"><strong>Pending: ${certTotals.pending}</strong></div>
+              <div class="col"><strong>Approved: ${certTotals.approved}</strong></div>
+              <div class="col"><strong>Rejected: ${certTotals.rejected}</strong></div>
+            </div>`;
+        }
+
+        // Render certificates
+        allCertificates.forEach(({ user, cert, fullName, certImagePath, formattedDate, status }) => {
+            const tr = document.createElement('tr');
+          
+          // Create status badge
+          let statusBadge = '';
+          if (status === 'approved') {
+            statusBadge = '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Approved</span>';
+          } else if (status === 'rejected') {
+            statusBadge = '<span class="badge bg-danger ms-2"><i class="fas fa-times me-1"></i>Rejected</span>';
+          } else {
+            statusBadge = '<span class="badge bg-warning ms-2"><i class="fas fa-clock me-1"></i>Pending</span>';
+          }
+          
+          // Create action buttons based on status
+          let actionButtons = '';
+          if (status === 'pending') {
+            actionButtons = `
+              <button class="btn btn-sm btn-success me-2" data-action="approve" data-user-id="${user._id}" data-cert-id="${cert._id}">
+                <i class="fas fa-check me-1"></i>Accept
+              </button>
+              <button class="btn btn-sm btn-outline-danger" data-action="reject" data-user-id="${user._id}" data-cert-id="${cert._id}">
+                <i class="fas fa-times me-1"></i>Reject
+              </button>
+            `;
+          } else if (status === 'rejected') {
+            actionButtons = `
+              <button class="btn btn-sm btn-outline-info" data-action="view-reason" data-reason="${cert.rejection?.reason || 'No reason provided'}">
+                <i class="fas fa-eye me-1"></i>View Reason
+              </button>
+            `;
+          } else {
+            actionButtons = `
+              <span class="text-muted">
+                <i class="fas fa-check-circle me-1"></i>Processed
+              </span>
+            `;
+          }
+          
+            tr.innerHTML = `
+            <td class="align-middle">${fullName}${statusBadge}</td>
+            <td class="align-middle">
+              <div class="certificate-container" 
+                   onclick="viewCertificate('${certImagePath}', '${fullName}')">
+                <img src="${certImagePath}" 
+                     alt="certificate" 
+                     class="certificate-image-small"
+                     onerror="console.log('Certificate image failed to load:', '${certImagePath}'); this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                     onload="console.log('Certificate image loaded:', '${certImagePath}'); this.style.display='block'">
+                <div class="text-muted certificate-placeholder">
+                  <i class="fas fa-image"></i>
+                </div>
+              </div>
+            </td>
+            <td class="align-middle">${formattedDate}</td>
+            <td class="align-middle">${actionButtons}</td>`;
+            tbody.appendChild(tr);
+        });
+
+        tbody.querySelectorAll('button[data-action]').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            const action = e.currentTarget.getAttribute('data-action');
+            const userId = e.currentTarget.getAttribute('data-user-id');
+            const certId = e.currentTarget.getAttribute('data-cert-id');
+            
+            if (action === 'approve') {
+              const r = await fetch(`/admin/certificates/${userId}/approve`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ certificationId: certId }) });
+              const j = await r.json();
+              if (j.success) loadCertificates();
+            } else if (action === 'reject') {
+              // Store current rejection data for modal
+              window.currentRejectionData = { userId, certId };
+              const modal = new bootstrap.Modal(document.getElementById('rejectionModal'));
+              modal.show();
+            } else if (action === 'view-reason') {
+              const reason = e.currentTarget.getAttribute('data-reason');
+              showRejectionReason(reason);
+            }
+          });
+        });
+      } catch (err) {
+        console.error('Error loading certificates', err);
+      }
+    }
+
+    async function loadContent() {
+      const tbody = document.getElementById('contentTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      try {
+        const res = await fetch('/admin/content/pending');
+        const data = await res.json();
+        if (!data.success) return;
+        const threads = data.data.threads || [];
+        const totals = { total: threads.length, threads: threads.length };
+        const contentStatsBar = document.getElementById('contentStatsBar');
+        if (contentStatsBar) {
+          contentStatsBar.innerHTML = `
+            <div class="row text-center">
+              <div class="col"><strong>Total: ${totals.total}</strong></div>
+              <div class="col"><strong>Threads: ${totals.threads}</strong></div>
+            </div>`;
+        }
+
+        threads.forEach(t => {
+          const tr = document.createElement('tr');
+          const uploaded = new Date(t.createdAt).toLocaleString();
+          const author = t.authorName || 'Unknown';
+          tr.innerHTML = `
+            <td class="align-middle">${t._id}</td>
+            <td class="align-middle">${author || 'Unknown'}</td>
+            <td class="align-middle">${uploaded}</td>
+            <td class="align-middle">
+              <button class="btn btn-sm btn-outline-info me-2" data-view-thread="${t._id}"><i class="fas fa-eye me-1"></i>View</button>
+              <button class="btn btn-sm btn-success me-2" data-approve-thread="${t._id}"><i class="fas fa-check me-1"></i>Approve</button>
+              <button class="btn btn-sm btn-outline-danger" data-reject-thread="${t._id}"><i class="fas fa-times me-1"></i>Reject</button>
+              <span class="d-none" id="threadTitle-${t._id}">${t.title || ''}</span>
+              <pre class="d-none" id="threadContent-${t._id}">${t.content || ''}</pre>
+              <span class="d-none" id="threadAttachments-${t._id}">${(t.attachments && t.attachments.length ? t.attachments.join('||') : '')}</span>
+            </td>`;
+          tbody.appendChild(tr);
+        });
+
+        tbody.querySelectorAll('button[data-view-thread]').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = e.currentTarget.getAttribute('data-view-thread');
+            const titleEl = document.getElementById(`threadTitle-${id}`);
+            const contentEl = document.getElementById(`threadContent-${id}`);
+            const attachEl = document.getElementById(`threadAttachments-${id}`);
+            const title = titleEl ? titleEl.textContent : 'Thread Detail';
+            const content = contentEl ? contentEl.textContent : '';
+            const attachments = attachEl ? attachEl.textContent : '';
+            viewThread(title, content, attachments);
+          });
+        });
+
+        tbody.querySelectorAll('button[data-approve-thread]').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            const id = e.currentTarget.getAttribute('data-approve-thread');
+            const r = await fetch(`/admin/threads/${id}/approve`, { method: 'POST' });
+            const j = await r.json();
+            if (j.success) loadContent();
+          });
+        });
+        tbody.querySelectorAll('button[data-reject-thread]').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            const id = e.currentTarget.getAttribute('data-reject-thread');
+            // reuse rejection modal
+            window.currentThreadRejectionId = id;
+            const modal = new bootstrap.Modal(document.getElementById('rejectionModal'));
+            modal.show();
+          });
+        });
+      } catch (err) {
+        console.error('Error loading content moderation', err);
+      }
+    }
+
+     // Certificate filter functions
+     function resetCertFilters() {
+       const statusDefault = document.getElementById('cert-all');
+       const sortDefault = document.getElementById('sort-date-desc');
+       if (statusDefault) statusDefault.checked = true;
+       if (sortDefault) sortDefault.checked = true;
+       // Clear other radios in groups to ensure UI sync
+       document.querySelectorAll('input[name="cert-status"]').forEach(r => { if (r !== statusDefault) r.checked = false; });
+       document.querySelectorAll('input[name="cert-sort"]').forEach(r => { if (r !== sortDefault) r.checked = false; });
+       loadCertificates();
+     }
+
+     function applyCertFilters() {
+       loadCertificates();
+     }
+
+     // Content filter functions
+     function resetContentFilters() {
+       const sortDefault = document.getElementById('content-date-desc');
+       if (sortDefault) sortDefault.checked = true;
+       document.querySelectorAll('input[name="content-sort"]').forEach(r => { if (r !== sortDefault) r.checked = false; });
+       loadContent();
+     }
+
+     function applyContentFilters() {
+       // In a future backend hookup, read selected radios and fetch accordingly
+       loadContent();
+     }
+
+    // Certificate modal functions
+    function viewCertificate(imagePath, guideName) {
+      const modal = new bootstrap.Modal(document.getElementById('certificateModal'));
+      const modalTitle = document.getElementById('certificateModalLabel');
+      const modalImage = document.getElementById('certificateImage');
+      
+      modalTitle.textContent = `Certificate - ${guideName}`;
+      modalImage.src = imagePath;
+      
+      // Set up download functionality
+      const downloadBtn = document.getElementById('downloadCertificate');
+      downloadBtn.onclick = () => downloadCertificate(imagePath, guideName);
+      
+      modal.show();
+    }
+
+    // Thread modal functions (reuse style)
+    function viewThread(title, content, attachments) {
+      const modal = new bootstrap.Modal(document.getElementById('threadViewModal'));
+      document.getElementById('threadViewModalLabel').textContent = 'Thread Detail';
+      document.getElementById('threadViewTitle').textContent = title || '';
+      document.getElementById('threadViewContent').textContent = content || '';
+      const imagesWrap = document.getElementById('threadViewImages');
+      if (imagesWrap) {
+        imagesWrap.innerHTML = '';
+        const files = Array.isArray(attachments) ? attachments : (typeof attachments === 'string' && attachments ? attachments.split('||') : []);
+        const normalized = files.filter(Boolean).map(src => (src.startsWith('http') || src.startsWith('/') ? src : `/${src}`));
+
+        if (normalized.length === 1) {
+          const src = normalized[0];
+          const container = document.createElement('div');
+          container.className = 'certificate-container';
+          container.style.cssText = 'width:100%; max-height:60vh; overflow:hidden; border-radius:8px; cursor:pointer; position:relative; background: var(--input-bg); box-shadow: 0 4px 8px rgba(0,0,0,0.15)';
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = 'attachment';
+          img.style.cssText = 'width:100%; height:100%; object-fit:contain; display:none;';
+          img.onload = () => { img.style.display = 'block'; placeholder.style.display = 'none'; };
+          img.onerror = () => { container.remove(); };
+          const placeholder = document.createElement('div');
+          placeholder.className = 'text-muted';
+          placeholder.style.cssText = 'height:300px; display:flex; align-items:center; justify-content:center; font-size:0.9rem;';
+          placeholder.innerHTML = '<i class="fas fa-image me-2"></i>Click to view';
+          container.appendChild(img);
+          container.appendChild(placeholder);
+          container.addEventListener('click', () => viewThreadImage(src, title || 'Thread Image'));
+          imagesWrap.appendChild(container);
+        } else if (normalized.length > 1) {
+          // Build a responsive grid of thumbnails
+          const grid = document.createElement('div');
+          grid.style.cssText = 'display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap:8px;';
+          normalized.forEach(src => {
+            const thumb = document.createElement('div');
+            thumb.style.cssText = 'width:100%; aspect-ratio: 4 / 3; overflow:hidden; border-radius:6px; cursor:pointer; background: var(--input-bg); box-shadow: 0 2px 6px rgba(0,0,0,0.1)';
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = 'attachment';
+            img.style.cssText = 'width:100%; height:100%; object-fit:cover; display:none;';
+            const placeholder = document.createElement('div');
+            placeholder.className = 'text-muted';
+            placeholder.style.cssText = 'width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:0.75rem;';
+            placeholder.innerHTML = '<i class="fas fa-image"></i>';
+            img.onload = () => { img.style.display = 'block'; placeholder.style.display = 'none'; };
+            img.onerror = () => { thumb.remove(); };
+            thumb.appendChild(img);
+            thumb.appendChild(placeholder);
+            thumb.addEventListener('click', () => viewThreadImage(src, title || 'Thread Image'));
+            grid.appendChild(thumb);
+          });
+          imagesWrap.appendChild(grid);
+        }
+      }
+      modal.show();
+    }
+
+    // Dedicated thread image modal
+    function viewThreadImage(imagePath, title) {
+      const modal = new bootstrap.Modal(document.getElementById('threadImageModal'));
+      const modalTitle = document.getElementById('threadImageModalLabel');
+      const modalImage = document.getElementById('threadImage');
+      modalTitle.textContent = title || 'Thread Image';
+      modalImage.src = imagePath;
+      modal.show();
+    }
+
+    function downloadCertificate(imagePath, guideName) {
+      // Create a temporary link element to trigger download
+      const link = document.createElement('a');
+      link.href = imagePath;
+      link.download = `certificate_${guideName.replace(/\s+/g, '_')}.jpg`;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Rejection modal functions
+    function showRejectionReason(reason) {
+      const modal = new bootstrap.Modal(document.getElementById('rejectionModal'));
+      const modalTitle = document.getElementById('rejectionModalLabel');
+      const modalBody = document.querySelector('#rejectionModal .modal-body');
+      const modalFooter = document.querySelector('#rejectionModal .modal-footer');
+      
+      // Change modal to view mode
+      modalTitle.innerHTML = '<i class="fas fa-eye text-info me-2"></i>Rejection Reason';
+      modalBody.innerHTML = `
+        <div class="alert alert-danger" role="alert">
+          <h6 class="alert-heading"><i class="fas fa-times-circle me-2"></i>Certificate Rejected</h6>
+          <p class="mb-0">${reason}</p>
+        </div>
+      `;
+      modalFooter.innerHTML = `
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+      `;
+      
+      modal.show();
+      
+      // Reset modal after closing
+      modal._element.addEventListener('hidden.bs.modal', function() {
+        resetRejectionModal();
+      }, { once: true });
+    }
+
+    function resetRejectionModal() {
+      const modalTitle = document.getElementById('rejectionModalLabel');
+      const modalBody = document.querySelector('#rejectionModal .modal-body');
+      const modalFooter = document.querySelector('#rejectionModal .modal-footer');
+      const rejectionReason = document.getElementById('rejectionReason');
+      
+      modalTitle.innerHTML = '<i class="fas fa-times-circle text-danger me-2"></i>Reject Certificate';
+      modalBody.innerHTML = `
+        <p class="mb-3">Please provide a reason for rejecting this certificate:</p>
+        <div class="form-group">
+          <label for="rejectionReason" class="form-label">Rejection Reason</label>
+          <textarea class="form-control" id="rejectionReason" rows="4" 
+                    placeholder="Enter the reason for rejection..." 
+                    class="textarea-theme"></textarea>
+        </div>
+      `;
+      modalFooter.innerHTML = `
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmRejection">
+          <i class="fas fa-times me-2"></i>Reject Certificate
+        </button>
+      `;
+      
+      // Re-attach event listener
+      document.getElementById('confirmRejection').addEventListener('click', handleRejectionConfirm);
+    }
+
+    function handleRejectionConfirm() {
+      const reason = document.getElementById('rejectionReason').value.trim();
+      if (!reason) {
+        alert('Please provide a reason for rejection.');
+        return;
+      }
+      
+      if (window.currentRejectionData) {
+        const { userId, certId } = window.currentRejectionData;
+        fetch(`/admin/certificates/${userId}/reject`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ certificationId: certId, reason })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            bootstrap.Modal.getInstance(document.getElementById('rejectionModal')).hide();
+            loadCertificates();
+          } else {
+            alert('Failed to reject certificate: ' + (data.message || 'Unknown error'));
+          }
+        })
+        .catch(err => {
+          console.error('Error rejecting certificate:', err);
+          alert('Failed to reject certificate. Please try again.');
+        });
+      } else if (window.currentThreadRejectionId) {
+        const id = window.currentThreadRejectionId;
+        fetch(`/admin/threads/${id}/reject`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            bootstrap.Modal.getInstance(document.getElementById('rejectionModal')).hide();
+            window.currentThreadRejectionId = null;
+            loadContent();
+          } else {
+            alert('Failed to reject thread: ' + (data.message || 'Unknown error'));
+          }
+        })
+        .catch(err => {
+          console.error('Error rejecting thread:', err);
+          alert('Failed to reject thread. Please try again.');
+        });
+      }
+    }
+
+    // Initialize rejection modal event listener
+    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'confirmRejection') {
+          handleRejectionConfirm();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

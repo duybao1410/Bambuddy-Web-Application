@@ -1,0 +1,463 @@
+<!-- user/my-trips.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Trips | Bambuddy</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <!-- Bootstrap Icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"/>
+
+    <!-- CSS Global Variable -->
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
+
+    <!-- CSS Style For Guide/User -->
+    <link rel="stylesheet" href="/css/user.css" />
+    <script src="/js/theme-loader.js"></script>
+  </head>
+  <body class="<%= user?.theme || 'light' %>">
+    <%- include('../../partials/navbar') %>
+
+    <main
+      id="main-content"
+      class="user-page-container content-fluid p-md-5 p-3 m-3 m-md-0"
+      role="main"
+      aria-label="My Trips Page"
+    >
+      <div class="row">
+        <aside
+          class="user-sidebar-navigation col-12 col-md-3 px-0 pe-md-3 mb-4 mb-md-0"
+          role="navigation"
+          aria-label="Dashboard navigation"
+        >
+          <ul class="nav flex-column row-gap-2 p-2" role="menubar">
+            <li
+              class="nav-item d-flex justify-content-start align-items-center"
+              role="none"
+            >
+              <a
+                class="nav-link flex-fill"
+                href="/user/profile"
+                role="menuitem"
+                aria-label="My Profile"
+                tabindex="0"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-person-circle me-2"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                >
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                  />
+                </svg>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li
+              class="nav-item d-flex justify-content-start align-items-center"
+              role="none"
+            >
+              <a
+                class="nav-link flex-fill"
+                href="/user/save-tour"
+                role="menuitem"
+                aria-label="Saved Tours"
+                tabindex="0"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-bookmarks me-2"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1z"
+                  />
+                  <path
+                    d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1"
+                  />
+                </svg>
+                <span>Saved Tours</span></a
+              >
+            </li>
+            <li
+              class="nav-item d-flex justify-content-start align-items-center"
+              role="none"
+            >
+              <a
+                class="nav-link flex-fill active"
+                aria-current="page"
+                href="/user/booking"
+                role="menuitem"
+                aria-label="My Trips - Current page"
+                tabindex="0"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-list-ul me-2"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2"
+                  />
+                </svg>
+                <span>Booking Management</span>
+              </a>
+            </li>
+            <li
+              class="nav-item d-flex justify-content-start align-items-center"
+              role="none"
+            >
+              <a
+                class="nav-link flex-fill"
+                href="/user/settings"
+                role="menuitem"
+                aria-label="Settings"
+                tabindex="0"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-gear-wide-connected me-2"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M7.068.727c.243-.97 1.62-.97 1.864 0l.071.286a.96.96 0 0 0 1.622.434l.205-.211c.695-.719 1.888-.03 1.613.931l-.08.284a.96.96 0 0 0 1.187 1.187l.283-.081c.96-.275 1.65.918.931 1.613l-.211.205a.96.96 0 0 0 .434 1.622l.286.071c.97.243.97 1.62 0 1.864l-.286.071a.96.96 0 0 0-.434 1.622l.211.205c.719.695.03 1.888-.931 1.613l-.284-.08a.96.96 0 0 0-1.187 1.187l.081.283c.275.96-.918 1.65-1.613.931l-.205-.211a.96.96 0 0 0-1.622.434l-.071.286c-.243.97-1.62.97-1.864 0l-.071-.286a.96.96 0 0 0-1.622-.434l-.205.211c-.695.719-1.888.03-1.613-.931l.08-.284a.96.96 0 0 0-1.186-1.187l-.284.081c-.96.275-1.65-.918-.931-1.613l.211-.205a.96.96 0 0 0-.434-1.622l-.286-.071c-.97-.243-.97-1.62 0-1.864l.286-.071a.96.96 0 0 0 .434-1.622l-.211-.205c-.719-.695-.03-1.888.931-1.613l.284.08a.96.96 0 0 0 1.187-1.186l-.081-.284c-.275-.96.918-1.65 1.613-.931l.205.211a.96.96 0 0 0 1.622-.434zM12.973 8.5H8.25l-2.834 3.779A4.998 4.998 0 0 0 12.973 8.5m0-1a4.998 4.998 0 0 0-7.557-3.779l2.834 3.78zM5.048 3.967l-.087.065zm-.431.355A4.98 4.98 0 0 0 3.002 8c0 1.455.622 2.765 1.615 3.678L7.375 8zm.344 7.646.087.065z"
+                  />
+                </svg>
+                <span>Settings</span>
+              </a>
+            </li>
+          </ul>
+        </aside>
+
+        <div
+          class="edit-profile-container col-md-9 col-12 px-xl-4 px-3"
+          role="main"
+          aria-label="My trips list"
+          style="min-height: 570px;"
+        >
+          <h1 id="trips-heading">My Trips</h1>
+          <div class="user-booking-list-container pt-2" role="region" aria-labelledby="trips-heading">
+            <% if (bookings && bookings.length > 0) { %> <%
+            bookings.forEach(booking => { %>
+            <div class="booking-card mb-3 p-3 pe-xl-4" role="article" aria-labelledby="tour-title-<%= booking.tourId %>">
+              <div class="row align-items-center">
+                <div class="col-12 col-xl-3 col-md-6 mb-3 mb-md-0">
+                  <a href="/tourDetail/<%= booking.tourId %>" aria-label="View <%= booking.tourTitle %> details">
+                    <img
+                      src="<%= '/uploads/tours/' + booking.image %>"
+                      alt="<%= booking.tourTitle %> tour image"
+                      class="img-fluid rounded"
+                      style="cursor: pointer;"
+                    />
+                  </a>
+                </div>
+                <div class="col-12 col-xl-6 col-md-6">
+                  <h5 class="tour-title mb-1" id="tour-title-<%= booking.tourId %>">
+                    <a href="/tourDetail/<%= booking.tourId %>" style="color: var(--text-color)" aria-label="<%= booking.tourTitle %> tour details">
+                      <%= booking.tourTitle %>
+                    </a>
+                  </h5>
+                  <p class="tour-slot mb-1">Slot: <%= booking.tourDate %></p>
+                  <p class="tour-guide mb-1">
+                    Guide: <strong><%= booking.guideName %></strong>
+                  </p>
+                  <p class="tour-location mb-1">
+                    Location: <%= booking.location.address %>
+                  </p>
+                  <h5 class="tour-price mb-0"><%= booking.pricing %> VND</h5>
+                </div>
+                <div class="col-12 col-xl-3">
+                  <div class="booking-actions-container">
+                    <span class="booking-status mb-2 d-block" role="status" aria-label="Booking status">
+                      <% if (booking.status === 'confirmed') { %>
+                      <span class="booking-status-confirmed" aria-label="Booking confirmed">Confirmed</span>
+                      <% } else if (booking.status === 'pending') {%>
+                      <span class="booking-status-pending" aria-label="Booking pending approval">Pending</span>
+                      <% } else { %>
+                      <span class="booking-status-cancel" aria-label="Booking cancelled">Cancel</span>
+                      <% } %>
+                    </span>
+                    <div class="booking-buttons-container">
+                      <% if (booking.status === 'confirmed') { %>
+                      <button
+                        class="btn btn-primary rate-tour-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#rateTourModal"
+                        data-tour-id="<%= booking.tourId %>"
+                        data-user-id="<%= booking.userId %>"
+                        aria-label="Rate <%= booking.tourTitle %> tour"
+                        aria-describedby="rate-tour-description"
+                      >
+                        Rate Tour
+                      </button>
+                      <% if (booking.status === 'confirmed' && booking.tourDate) { %>
+                        <button class="btn google-calendar-btn"
+                          data-title="<%= booking.tourTitle %>"
+                          data-date="<%= booking.tourDate %>"
+                          data-location="<%= (booking.location && booking.location.address) ? booking.location.address : '' %>"
+                          data-itinerary="<%= booking.itinerary || '' %>">
+                          Add to your calendar
+                        </button>
+                      <% } %>
+                      
+                      <div id="rate-tour-description" class="visually-hidden">
+                        Open dialog to rate and review this tour
+                      </div>
+
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% }); %> <% } else { %>
+            <div class="text-center py-5" role="status" aria-live="polite">
+              <p>You have no booked tours.</p>
+            </div>
+            <% } %> <% if (pagination && pagination.totalPages > 1) { %>
+            <nav
+              aria-label="Booking list pagination"
+              class="d-flex justify-content-center"
+              role="navigation"
+            >
+              <ul class="pagination">
+                <% if (pagination.hasPrevPage) { %>
+                <li class="page-item">
+                  <a class="page-link" href="?page=<%= pagination.prevPage %>" aria-label="Go to previous page"
+                    >Previous</a
+                  >
+                </li>
+                <% } else { %>
+                <li class="page-item disabled">
+                  <span class="page-link" aria-label="Previous page not available">Previous</span>
+                </li>
+                <% } %> <% let startPage = Math.max(1, pagination.currentPage -
+                2); let endPage = Math.min(pagination.totalPages,
+                pagination.currentPage + 2); if (endPage - startPage < 4) { if
+                (startPage === 1) { endPage = Math.min(pagination.totalPages,
+                startPage + 4); } else { startPage = Math.max(1, endPage - 4); }
+                } for (let i = startPage; i <= endPage; i++) { %>
+                <li
+                  class="page-item <%= pagination.currentPage === i ? 'active' : '' %>"
+                >
+                  <a class="page-link" href="?page=<%= i %>" <% if (pagination.currentPage === i) { %>aria-current="page" aria-label="Current page <%= i %>"<% } else { %>aria-label="Go to page <%= i %>"<% } %>><%= i %></a>
+                </li>
+                <% } %> <% if (pagination.hasNextPage) { %>
+                <li class="page-item">
+                  <a class="page-link" href="?page=<%= pagination.nextPage %>" aria-label="Go to next page"
+                    >Next</a
+                  >
+                </li>
+                <% } else { %>
+                <li class="page-item disabled">
+                  <span class="page-link" aria-label="Next page not available">Next</span>
+                </li>
+                <% } %>
+              </ul>
+            </nav>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rating Modal -->
+      <div
+        class="modal fade"
+        id="rateTourModal"
+        tabindex="-1"
+        aria-labelledby="rateTourModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="rateTourModalLabel">Rate the Tour</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form id="ratingForm" aria-labelledby="rateTourModalLabel">
+                <div class="mb-3">
+                  <label for="ratingCount" class="form-label"
+                    >Rating (1 to 5 stars)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="ratingCount"
+                    min="1"
+                    max="5"
+                    required
+                    aria-describedby="rating-help"
+                  />
+                  <div id="rating-help" class="visually-hidden">
+                    Enter a rating from 1 to 5 stars
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="ratingText" class="form-label">Review</label>
+                  <textarea
+                    class="form-control"
+                    id="ratingText"
+                    rows="3"
+                    aria-describedby="review-help"
+                  ></textarea>
+                  <div id="review-help" class="visually-hidden">
+                    Write your review or feedback about the tour (optional)
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary" aria-describedby="submit-rating-help">
+                  Submit Rating
+                </button>
+                <div id="submit-rating-help" class="visually-hidden">
+                  Submit your rating and review for this tour
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <%- include('../../partials/footer') %>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      let selectedTourId = null;
+      let selectedUserId = null;
+    
+    
+      // Wait for DOM to load
+      document.addEventListener('DOMContentLoaded', () => {
+        const ratingButtons = document.querySelectorAll('.btn[data-tour-id]');
+        const ratingForm = document.getElementById('ratingForm');
+        const googleCalendarButtons = document.querySelectorAll('.google-calendar-btn');
+    
+    
+        ratingButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            selectedTourId = button.getAttribute('data-tour-id');
+            selectedUserId = button.getAttribute('data-user-id');
+          });
+        });
+    
+        // Add event listeners for Google Calendar buttons
+        googleCalendarButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const title = button.getAttribute('data-title');
+            const date = button.getAttribute('data-date');
+            const location = button.getAttribute('data-location');
+            const itinerary = button.getAttribute('data-itinerary');
+            testGoogleCalendar(title, date, location, itinerary);
+          });
+        });
+    
+    
+        ratingForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+    
+    
+          const ratingCount = document.getElementById('ratingCount').value;
+          const ratingText = document.getElementById('ratingText').value;
+    
+    
+          if (!selectedTourId) {
+            alert('Tour ID is missing. Please try again.');
+            return;
+          }
+          try {
+            const response = await fetch(`/tour/${selectedTourId}/rating`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+           //     userId: selectedUserId,
+                count: ratingCount,
+                text: ratingText,
+              }),
+            });
+    
+    
+    
+    
+            if (response.ok) {
+              alert('Your rating has been submitted!');
+              const modalEl = document.getElementById('rateTourModal');
+              const modalInstance = bootstrap.Modal.getInstance(modalEl);
+              modalInstance.hide();
+            } else {
+              const error = await response.json();
+              alert(`Error: ${error.message}`);
+            }
+          } catch (error) {
+            console.error('Error submitting rating:', error);
+            alert('An error occurred while submitting your rating.');
+          }
+        });
+      });
+    
+      // Test Google Calendar URL generation
+      function testGoogleCalendar(title, date, location, itinerary) {
+        const base = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
+        const start = date.replace(/-/g, ""); // "2025-10-13" -> "20251013"
+        const end = start; // same day only
+        
+        const params = new URLSearchParams({
+          text: title,
+          dates: `${start}/${end}`,
+          details: itinerary || `Your booking for ${title}`,
+          location: location || "",
+        });
+        
+        const result = `${base}&${params.toString()}`;
+        
+        // Open the URL in a new tab
+        window.open(result, '_blank');
+      
+      }
+    </script>
+  </body>
+</html>

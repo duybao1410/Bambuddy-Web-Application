@@ -1,0 +1,601 @@
+/* User Management Pages Module - Minh*/
+/* Sidebar */
+aside .nav {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+}
+
+.user-sidebar-navigation .nav-item {
+  color: var(--text-color);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+}
+
+.user-sidebar-navigation .nav-item .nav-link {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+}
+
+.user-sidebar-navigation .nav-item .nav-link.active {
+  border-radius: var(--border-radius);
+  color: var(--primary-lightest);
+  background-color: var(--accent);
+}
+
+/* ====== User Dashboard ======*/
+.user-dashboard-container {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 1.5rem 2.5rem;
+}
+
+.overview-cards h2 {
+  color: var(--text-color);
+  border-bottom: 1.5px solid var(--border-color);
+}
+
+.dashboard-card .card .card-body h3 {
+  color: var(--primary-dark);
+}
+
+.dashboard-card .card {
+  border: 3px solid var(--primary-dark);
+}
+
+/*Services Management*/
+.user-dashboard-serviceheading-container {
+  border-bottom: 1.5px solid var(--border-color);
+}
+
+.user-dashboard-serviceheading-container h3 {
+  color: var(--text-color);
+}
+
+.google-calendar-btn {
+  font-size: 14px;
+  border: 1px solid var(--primary-main);
+  background-color: transparent;
+  color: var(--primary-main);
+  transition: all 0.2s ease;
+}
+
+.google-calendar-btn:hover {
+  background-color: var(--primary-main);
+  color: white;
+  border-color: var(--primary-main);
+}
+
+.rate-tour-btn {
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+/* Service Cards Grid Layout */
+.service-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+}
+
+.service-card-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+.service-card-body {
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.service-card-text {
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  flex-grow: 1;
+  line-height: 1.5;
+}
+
+.service-card-price {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.service-card-rating {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.service-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.btn-edit,
+.btn-delete,
+.btn-restore {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-edit {
+  background-color: var(--accent);
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: var(--accent);
+  opacity: 0.8;
+}
+
+.btn-delete {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--accent);
+}
+
+.btn-restore {
+  background-color: #ff7043;
+  color: white;
+}
+
+#active-tab,
+#deleted-tab {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+}
+
+#active-tab.active,
+#deleted-tab.active {
+  font-weight: var(--font-weight-semibold);
+  color: var(--accent);
+}
+
+/*  ==== Tour Creation Form ======= */
+.tour-creation-container {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+}
+
+.tour-creation-container h1 {
+  color: var(--text-color);
+  border-bottom: 1.5px solid var(--accent);
+  padding-bottom: 0.5rem;
+}
+
+/* Improve readability of inputs/textareas in dark mode */
+.tour-creation-container .form-control,
+.tour-creation-container textarea,
+.tour-creation-container input[type="text"],
+.tour-creation-container input[type="number"],
+.tour-creation-container input[type="date"] {
+  background-color: var(--input-bg) !important;
+  color: var(--text-color) !important;
+  border-color: var(--input-border) !important;
+}
+
+.tour-creation-container .form-control::placeholder,
+.tour-creation-container textarea::placeholder,
+.tour-creation-container input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.checkbox-group {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  border: 1.5px solid var(--accent);
+}
+
+.checkbox-group label {
+  margin: 0.5rem 0rem;
+}
+
+.date-slot-container input[type="date"] {
+  padding: 5px;
+  height: 3rem;
+  width: 10rem;
+  border: 1.5px solid var(--accent);
+  border-radius: var(--border-radius);
+  background-color: var(--input-bg);
+  color: var(--text-color);
+}
+
+/* Global form readability across pages (dark mode safe) */
+.form-label,
+label {
+  color: var(--text-color) !important;
+}
+
+.form-control,
+textarea,
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+  background-color: var(--input-bg) !important;
+  color: var(--text-color) !important;
+  border-color: var(--input-border) !important;
+}
+
+.form-control::placeholder,
+textarea::placeholder,
+input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.date-slot-container button[type="button"] {
+  height: 2rem;
+  width: 2rem;
+  margin-left: 0.5rem;
+  background-color: var(--accent);
+  color: white;
+  border: 0px;
+  border-radius: var(--border-radius);
+}
+
+.date-slot-container #dateSlotGroup {
+  margin: 0.5rem 0rem;
+  padding: 0.5rem;
+  background-color: var(--card-bg);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--border-radius);
+}
+
+.date-slot-container #dateSlotGroup span {
+  margin-left: 1rem;
+}
+
+.date-slot-container #dateSlotGroup button {
+  height: 2rem;
+  width: 2rem;
+  margin-right: 0.5rem;
+  background-color: var(--accent);
+  color: white;
+  border: 0px;
+  border-radius: var(--border-radius);
+}
+
+.image-remove-btn {
+  height: 2rem;
+  width: 2rem;
+  margin-left: 0.5rem;
+  background-color: var(--accent);
+  color: white;
+  border: 0px;
+  border-radius: var(--border-radius);
+}
+
+.image-preview-card {
+  position: relative;
+  width: auto;
+  height: 10rem;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+}
+
+.image-preview-grid .image-preview-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ====== Profile Edit ======*/
+.edit-profile-container {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 1.5rem 2.5rem;
+}
+
+.edit-profile-container h1 {
+  color: var(--text-color);
+  border-bottom: 1.5px solid var(--accent);
+  padding-bottom: 0.5rem;
+}
+
+.edit-profile-container .form-label {
+  font-size: 1rem;
+  font-weight: var(--font-weight-normal);
+  color: var(--text-color);
+}
+
+.edit-profile-container label.form-check-label {
+  color: var(--text-color);
+}
+
+.basicInformation-container,
+.profilePhoto-container,
+.languagesAndSpeciliazations-container,
+.certification-container {
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.basicInformation-container .form-control {
+  border: 1px solid var(--input-border);
+  resize: none;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+}
+
+.profilePhoto-container .profile-picture {
+  border-radius: 50%;
+  height: 150px;
+  width: 150px;
+  border: 2px solid var(--accent);
+}
+
+#changePhotoBtn {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background-color: var(--card-bg);
+  max-width: 50%;
+}
+
+#changePhotoBtn:hover {
+  color: white;
+  background-color: var(--accent);
+}
+
+#profilePhotoError {
+  text-align: center;
+}
+
+/* ============== Responsive tweaks for settings layout ============== */
+@media (max-width: 991.98px) {
+  .edit-profile-container {
+    padding: 1.25rem 1.5rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .edit-profile-container {
+    padding: 1rem;
+  }
+
+  .basicInformation-container,
+  .profilePhoto-container {
+    padding: 1rem !important;
+  }
+}
+
+.languagesAndSpeciliazations-container .form-check-input+.form-check-label {
+  padding-bottom: 7px;
+}
+
+.certification-container .certificate-title {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-radius: var(--border-radius);
+}
+
+/* ======== Booking Management ====== */
+nav[aria-label="Page navigation"] {
+  background-color: var(--card-bg) !important;
+}
+
+.booking-card {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.booking-status-confirmed,
+.booking-status-pending,
+.booking-status-cancel {
+  font-weight: var(--font-weight-semibold);
+}
+
+.booking-status-confirmed {
+  color: var(--accent);
+}
+
+.booking-status-pending {
+  color: var(--bs-warning);
+}
+
+.booking-status-cancel {
+  color: var(--bs-danger);
+}
+
+/* ======= Booking List of User ========*/
+.user-booking-list-container .booking-card {
+  border-left: 4px solid var(--accent);
+}
+
+/* Booking Actions Container */
+.booking-actions-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-start;
+}
+
+.booking-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+/* Desktop: Align buttons to the right */
+@media (min-width: 1200px) {
+  .booking-actions-container {
+    align-items: flex-end;
+  }
+
+  .booking-buttons-container {
+    align-items: flex-end;
+    width: 100%;
+  }
+
+  .google-calendar-btn,
+  .rate-tour-btn {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+/* Tablet: Center align buttons */
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .booking-actions-container {
+    align-items: center;
+  }
+
+  .booking-buttons-container {
+    align-items: center;
+    width: 100%;
+  }
+
+  .google-calendar-btn,
+  .rate-tour-btn {
+    width: 100%;
+    max-width: 250px;
+  }
+}
+
+/* Mobile: Stack buttons vertically, full width */
+@media (max-width: 767.98px) {
+  .booking-actions-container {
+    align-items: stretch;
+    margin-top: 1rem;
+  }
+
+  .booking-buttons-container {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .google-calendar-btn,
+  .rate-tour-btn {
+    width: 100%;
+    margin: 0;
+  }
+
+  .booking-status {
+    text-align: center;
+    margin-bottom: 1rem !important;
+  }
+}
+
+/* ========= Guide Page for user ======*/
+aside .infoCard {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color)
+}
+
+aside.tourguideInfo-container img {
+  border-radius: 50%;
+  height: 150px;
+  width: 150px;
+  border: 2px solid var(--primary-dark);
+}
+
+.tourservices-lists {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+}
+
+.services-card {
+  background-color: var(--sidebar-bg);
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--primary-dark);
+  border-top: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tourservices-lists .services-card .tour-price {
+  color: var(--primary-main);
+}
+
+.tourservices-lists .services-card .tour-price .tour-title {
+  color: var(--primary-dark);
+}
+
+#btn-seeDetails {
+  background-color: var(--primary-dark) !important;
+}
+
+/* Notification */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  z-index: 1000;
+  transform: translateX(400px);
+  transition: transform 0.3s ease;
+  max-width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.success {
+  background-color: #10b981;
+}
+
+.notification.error {
+  background-color: #ef4444;
+}
+
+.notification.info {
+  background-color: #3b82f6;
+}
+
+.save-tour-btn {
+  transition: all 0.2s ease;
+  color: var(--accent) !important;
+  font-size: 1.2rem;
+}
+
+.save-tour-btn:hover {
+  transform: scale(1.1);
+  color: var(--accent) !important;
+}
+
+.save-tour-btn.saved {
+  color: var(--accent) !important;
+}
+
+/* Navbar brand color fix for dark mode on user pages */
+body.dark .navbar .navbar-brand {
+  color: var(--text-secondary) !important;
+}
+body.dark .navbar-nav .nav-item .nav-link {
+  color: var(--text-color) !important;
+}

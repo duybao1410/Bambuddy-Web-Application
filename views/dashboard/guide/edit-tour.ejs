@@ -1,0 +1,289 @@
+<!-- /*Tour Creation Form*/ -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Tour | Bambuddy</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <!-- Bootstrap Icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+
+    <!-- Google Font -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+    />
+
+    <!-- CSS Global Variable -->
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
+
+    <!-- CSS Style For Guide/User -->
+    <link rel="stylesheet" href="/css/user.css" />
+      <script src="/js/theme-loader.js"></script>
+  </head>
+  <body class="<%= user?.theme || 'light' %>">
+    <%- include('../../partials/navbar') %>
+
+    <main id="main-content" class="container tour-creation-container p-xl-5 my-xl-4 p-5 my-3" role="main" aria-label="Edit Tour Form">
+      <h1 id="edit-tour-heading" class="row">Edit Tour</h1>
+      
+      <form
+        action="/updateTour/<%= tour._id %>"
+        method="POST"
+        class="tour-creation-form row"
+        aria-labelledby="edit-tour-heading"
+        novalidate
+      >
+        <label for="tour-title" class="form-label">Title</label>
+        <input
+          type="text"
+          id="tour-title"
+          name="title"
+          placeholder="What is your title?"
+          class="form-control"
+          value="<%= tour.title %>"
+          required
+        />
+
+        <div class="row ps-0 pe-0 align-items-end gx-0 gx-xl-5">
+          <div class="col-xl-6 pe-0 mb-xl-0 col-12">
+            <label for="tour-location-input" class="form-label">Location</label>
+            <div class="position-relative">
+              <input
+                type="text"
+                id="tour-location-input"
+                name="tour-location-input"
+                placeholder="Search for a location in Vietnam..."
+                class="form-control"
+                autocomplete="off"
+                value="<%= tour.location.address %>"
+                required
+              />
+              <div
+                id="location-suggestions"
+                class="dropdown-menu w-100"
+                style="display: none"
+              >
+                <!-- Location suggestions will appear here -->
+              </div>
+            </div>
+            <!-- Hidden fields to store the selected location data -->
+            <input type="hidden" id="location-address" name="address" value="<%= tour.location.address %>" />
+            <input type="hidden" id="location-city" name="city" value="<%= tour.location.city %>" />
+            <input type="hidden" id="location-lat" name="lat" value="<%= tour.location.coordinates.lat %>" />
+            <input type="hidden" id="location-lng" name="lng" value="<%= tour.location.coordinates.lng %>" />
+            <input type="hidden" id="location-place-id" name="placeId" value="<%= tour.location.placeId || '' %>" />
+            <div id="location-feedback" class="form-text text-muted">
+              Enter the location name and select from the suggestion list.
+            </div>
+          </div>
+
+          <div class="col-12 col-xl-3 mb-xl-0">
+            <label for="tour-duration" class="form-label">Duration</label>
+            <input
+              type="number"
+              name="durationMinutes"
+              id="tour-duration"
+              placeholder="Minutes"
+              class="form-control w-auto"
+              value="<%= tour.durationMinutes %>"
+              required
+              aria-describedby="duration-help"
+            />
+            <div id="duration-help" class="form-text text-muted">
+              Enter the duration in minutes.
+            </div>
+          </div>
+
+          <div class="col-12 col-xl-3">
+            <label for="tour-pricing" class="form-label">Pricing</label>
+            <input
+              type="number"
+              name="pricing"
+              id="tour-pricing"
+              placeholder="Pricing (VND)"
+              class="form-control w-auto"
+              value="<%= tour.pricing %>"
+              required
+              aria-describedby="pricing-help"
+            />
+            <div id="pricing-help" class="form-text text-muted">
+              Your pricing is in Vietnamese Dong.
+            </div>
+          </div>
+        </div>
+
+        <label for="tour-description" class="form-label">Description</label>
+        <textarea
+          id="tour-description"
+          name="description"
+          placeholder="Tell us about your tour..."
+          class="form-control"
+          rows="4"
+          required
+          aria-describedby="description-help"
+        ><%= tour.description %></textarea>
+        <div id="description-help" class="visually-hidden">Provide a detailed description of your tour experience</div>
+
+        <label for="tour-intinerary" class="form-label">Intinerary</label>
+        <textarea
+          id="tour-intinerary"
+          name="itinerary"
+          placeholder="Your Tour Itinerary"
+          class="form-control"
+          rows="5"
+          required
+          aria-describedby="itinerary-help"
+        ><%= tour.itinerary %></textarea>
+        <div id="itinerary-help" class="visually-hidden">Describe the day-by-day schedule and activities of your tour</div>
+
+        <fieldset class="p-0">
+          <legend class="form-label">Category</legend>
+          <div class="checkbox-group row mx-0 py-4" role="group" aria-labelledby="category-help">
+            <div id="category-help" class="visually-hidden">Select one or more categories that describe your tour</div>
+          <div class="col-12 col-xl-3 mb-2">
+            <label class="form-check-label" for="foodAndCulinaryTours"
+              ><input
+                type="checkbox"
+                name="category"
+                value="Food and Culinary Tours"
+                class="form-check-input"
+                id="foodAndCulinaryTours"
+                <%= tour.category && tour.category.includes('Food and Culinary Tours') ? 'checked' : '' %>
+              />
+              Food and Culinary Tours</label
+            >
+          </div>
+          <div class="col-12 col-xl-3 mb-2">
+            <label class="form-check-label" for="shoppingTours"
+              ><input
+                type="checkbox"
+                name="category"
+                value="Shopping Tours"
+                class="form-check-input"
+                id="shoppingTours"
+                <%= tour.category && tour.category.includes('Shopping Tours') ? 'checked' : '' %>
+              />
+              Shopping Tours</label
+            >
+          </div>
+
+          <div class="col-12 col-xl-3 mb-2">
+            <label class="form-check-label" for="photographyTours"
+              ><input
+                type="checkbox"
+                name="category"
+                value="Photography Tours"
+                class="form-check-input"
+                id="photographyTours"
+                <%= tour.category && tour.category.includes('Photography Tours') ? 'checked' : '' %>
+              />
+              Photography Tours</label
+            >
+          </div>
+          <div class="col-12 col-xl-3 mb-2">
+            <label class="form-check-label" for="chillingandRelaxingTours"
+              ><input
+                type="checkbox"
+                name="category"
+                value="Chilling And Relaxing Tours"
+                class="form-check-input"
+                id="chillingandRelaxingTours"
+                <%= tour.category && tour.category.includes('Chilling And Relaxing Tours') ? 'checked' : '' %>
+              />
+              Chilling and Relaxing Tours</label
+            >
+          </div>
+
+          <div class="col-12 col-xl-3 mb-2">
+            <label class="form-check-label" for="historicalTours"
+              ><input
+                type="checkbox"
+                name="category"
+                value="Historical Tours"
+                class="form-check-input"
+                id="historicalTours"
+                <%= tour.category && tour.category.includes('Historical Tours') ? 'checked' : '' %>
+              />
+              Historical Tours</label
+            >
+          </div>
+          <div class="col-12 col-xl-3 mb-2">
+            <label class="form-check-label" for="culturalExperience"
+              ><input
+                type="checkbox"
+                name="category"
+                value="Cultural Experience"
+                class="form-check-input"
+                id="culturalExperience"
+                <%= tour.category && tour.category.includes('Cultural Experience') ? 'checked' : '' %>
+              />
+              Cultural Experience</label
+            >
+          </div>
+
+          <div class="col-12 col-xl-3 mb-2">
+            <label class="form-check-label" for="nightLife"
+              ><input
+                type="checkbox"
+                name="category"
+                value="Night Life"
+                class="form-check-input"
+                id="nightLife"
+                <%= tour.category && tour.category.includes('Night Life') ? 'checked' : '' %>
+              />
+              Night Life</label
+            >
+          </div>
+        </fieldset>
+
+        <fieldset class="p-0">
+          <legend class="form-label">Slot Availability</legend>
+          <div class="date-slot-container p-0" role="group" aria-labelledby="slot-help">
+            <div id="slot-help" class="visually-hidden">Add available dates for your tour</div>
+            <input type="date" id="dateSlotInput" min="" aria-label="Select date for availability slot" />
+            <button type="button" onclick="addDateSlot()" aria-label="Add selected date to availability slots">+</button>
+            <div id="dateSlotGroup" aria-live="polite" aria-label="Selected availability dates">
+            <!-- Pre-populate existing availability slots -->
+            <% if (tour.availability && tour.availability.length > 0) { %>
+                <% tour.availability.forEach(function(slot, index) { %>
+                <% if (!slot.isBooked) { %>
+                    <div class="date-slot-item" data-date="<%= slot.date %>">
+                    <span><%= new Date(slot.date).toLocaleDateString() %></span>
+                    <button type="button" onclick="removeDateSlot(this)" aria-label="Remove date slot">×</button>
+                    </div>
+                <% } %>
+                <% }) %>
+            <% } %>
+          </div>
+            <input type="hidden" name="availability" id="dateSlotHidden" />
+          </div>
+        </fieldset>
+
+        <button type="submit" class="btn-primary mt-5 py-2" aria-describedby="submit-help">Update Tour</button>
+        <div id="submit-help" class="visually-hidden">Submit the form to update your tour</div>
+      </form>
+    </main>
+
+    <%- include('../../partials/footer') %>
+
+    <script src="/js/user.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

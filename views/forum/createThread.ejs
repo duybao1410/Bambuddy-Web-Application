@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create New Thread</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSS and bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/forum.css">
+    <link rel="stylesheet" href="/css/style.css">
+  <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"/>
+    <script src="/js/theme-loader.js"></script>
+  </head>
+  <body class="<%= user?.theme || 'light' %>">
+  <%- include('../partials/navbar') %>
+  
+  <div class="container thread-container my-5 p-5">
+    <h1>Create a New Thread</h1>
+    <form action="/threads" method="POST" enctype="multipart/form-data" id="threadForm">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" name="title" maxlength="200" placeholder="Enter thread title" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="content" class="form-label">Content</label>
+        <textarea class="form-control" id="content" name="content" rows="10" maxlength="10000" placeholder="Enter thread content" required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="tags" class="form-label">Tags (max 10 characters each, comma separated)</label>
+        <input type="text" class="form-control" id="tags" name="tags" placeholder="e.g., travel, adventure, tips">
+        <div id="tagsError" class="invalid-feedback"></div>
+      </div>
+
+      <div class="mb-3">
+        <label for="threadPhotos" class="form-label">Upload Photos (max 5 photos, 5MB each)</label>
+        <input type="file" class="form-control" id="threadPhotos" name="threadPhotos" multiple accept="image/*">
+        <div id="photoError" class="invalid-feedback"></div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 89%;">Create Thread</button>
+      <a href="/threads" class="btn btn-secondary ms-2" style="width:auto;">Return</a>
+    </form>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('threadForm');
+    const tagsInput = document.getElementById('tags');
+    const photosInput = document.getElementById('threadPhotos');
+    const tagsError = document.getElementById('tagsError');
+    const photoError = document.getElementById('photoError');
+
+    tagsInput.addEventListener('input', function() {
+        validateTags();
+    });
+
+    photosInput.addEventListener('change', function() {
+        validatePhotos();
+    });
+
+    // Form submission validation
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        if (!validateTags()) isValid = false;
+        if (!validatePhotos()) isValid = false;
+        if (!isValid) e.preventDefault();
+    });
+
+  /* Cnay de check tags */
+    function validateTags() {
+        const tagsValue = tagsInput.value.trim();
+        
+        if (!tagsValue) {
+            tagsInput.classList.remove('is-invalid');
+            tagsError.textContent = '';
+            return true;
+        }
+
+        const tags = tagsValue.split(',').map(tag => tag.trim());
+        const invalidTags = tags.filter(tag => {
+            return tag.length === 0 || tag.length > 10 || !/^[a-zA-Z0-9]+$/.test(tag);
+        });
+
+        if (invalidTags.length > 0) {
+            tagsInput.classList.add('is-invalid');
+            tagsError.textContent = 'Each tag must be 1-10 characters (letters and numbers only), no empty tags allowed';
+            return false;
+        } else {
+            tagsInput.classList.remove('is-invalid');
+            tagsError.textContent = '';
+            return true;
+        }
+    }
+
+/* Cnay de check dung luong cua anh*/
+    function validatePhotos() {
+        const files = photosInput.files;
+        const maxFiles = 5;
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        if (files.length === 0) {
+            photosInput.classList.remove('is-invalid');
+            photoError.textContent = '';
+            return true;
+        }
+
+        if (files.length > maxFiles) {
+            photosInput.classList.add('is-invalid');
+            photoError.textContent = `Maximum ${maxFiles} photos allowed. You selected ${files.length} photos.`;
+            return false;
+        }
+
+        const oversizedFiles = [];
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].size > maxSize) {
+                oversizedFiles.push(files[i].name);
+            }
+        }
+
+        if (oversizedFiles.length > 0) {
+            photosInput.classList.add('is-invalid');
+            photoError.textContent = `The following files exceed 5MB limit: ${oversizedFiles.join(', ')}`;
+            return false;
+        }
+
+        photosInput.classList.remove('is-invalid');
+        photoError.textContent = '';
+        return true;
+    }
+});
+</script>
+</body>
+</body>
+<footer>
+  <!-- Footer -->
+   <div>
+    <%- include('../partials/footer') %>
+  </div>
+</footer>
+</html>

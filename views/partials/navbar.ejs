@@ -1,0 +1,105 @@
+<!--  Top Navigator  -->
+<nav class="navbar navbar-expand-md px-2 px-md-3 px-xl-5">
+  <div class="container-fluid px-0">
+    <a class="navbar-brand me-auto order-md-1 order-1" href="/">BamBuddy</a>
+    <button
+      class="navbar-toggler order-3 border border-0 px-0"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse order-md-2 order-4" id="navbarSupportedContent">
+      <ul
+        class="navbar-nav justify-content-center flex-grow-1 pe-2 pe-md-3 pe-xl-5"
+      >
+        <li class="nav-item">
+          <a class="nav-link" href="/discover">Discover</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Discussion
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/threads">Recent Threads</a></li>
+            <li><a class="dropdown-item" href="/threads/new">Create a Thread</a></li>
+            <li>
+              <a class="dropdown-item" href="/threads/my-posts">Manage your Threads</a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/aboutUs">Contact</a>
+        </li>
+      </ul>
+    </div>
+     <% if (!user) { %>
+       <!-- Chưa đăng nhập -->
+       <a href="/auth/login" class="login-button order-md-3 order-2">Login</a>
+     <% } else { %>
+       <!-- Đã đăng nhập -->
+       <div class="user-menu dropdown order-md-3 order-2">
+        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <img
+            src="<%= (user && user.profilePicture)
+              ? (user.profilePicture.startsWith('http')
+                  ? user.profilePicture
+                  : ('/uploads/profilePicture/' + user.profilePicture))
+              : '/img/defaultAvatar.png' %>"
+            alt="Avatar"
+            class="avatar-img"
+          />
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <% if (user.role === 'admin') { %>
+            <li><a class="dropdown-item" href="/admin/dashboard">Dashboard</a></li>
+            <li><a class="dropdown-item" href="/admin/settings">Account Settings</a></li>
+          <% } else if (user.role === 'tourguide') { %>
+            <li><a class="dropdown-item" href="/guide/dashboard">Dashboard</a></li>
+            <li><a class="dropdown-item" href="/guide/profile">Profile Information</a></li>
+            <li><a class="dropdown-item" href="/guide/booking">Booking Management</a></li>
+            <li><a class="dropdown-item" href="/guide/settings">Account Settings</a></li>
+          <% } else { %>
+            <li><a class="dropdown-item" href="/user/profile">Profile Information</a></li>
+            <li><a class="dropdown-item" href="/user/save-tour">Saved Tours</a></li>
+            <li><a class="dropdown-item" href="/user/booking">My Trips</a></li>
+            <li><a class="dropdown-item" href="/user/settings">Account Settings</a></li>
+          <% } %>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <form id="logoutForm" method="POST" action="/auth/logout" style="display: inline;">
+              <button id="logoutBtn" type="button" class="dropdown-item" style="border: none; background: none; width: 100%; text-align: left;">
+                Logout
+              </button>
+            </form>
+            <script>
+              (function(){
+                const btn = document.getElementById('logoutBtn');
+                if (btn) {
+                  btn.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    try {
+                      await fetch('/auth/logout', { method: 'POST' });
+                    } catch (err) {}
+                    window.location.href = '/';
+                  });
+                }
+              })();
+            </script>
+          </li>
+         </ul>
+       </div>
+     <% } %>
+  </div>
+  </div>
+</nav>

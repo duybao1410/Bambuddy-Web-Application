@@ -1,0 +1,576 @@
+/* Tour Pages Module - Bao*/
+/* ====== Base Styles (Giữ nguyên) ====== */
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+}
+
+.header-bg {
+  background: linear-gradient(to right,
+      #023337,
+      #4ea674);
+  color: white;
+  padding: 50px 0;
+  text-align: center;
+  border-radius: var(--border-radius-lg);
+}
+
+#search-heading,
+#guide-heading {
+  color: var(--primary-lightest)
+}
+
+.section-bg {
+  background: linear-gradient(to right,
+      #4ea674,
+      #c0e6b9);
+  padding: 40px;
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  color: white;
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+}
+
+.number {
+  background-color: var(--primary-main);
+  color: white;
+  font-weight: bold;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.font-primary-main {
+  color: var(--primary-main);
+}
+
+.font-primary-dark {
+  --primary-dark: #023337;
+}
+
+.btn-primary-main {
+  background-color: var(--primary-main);
+  color: white;
+  border: none;
+}
+
+.btn-primary-dark {
+  background-color: var(--primary-dark);
+  color: white;
+  border: none;
+}
+
+/* ====== Discover Page / Detail Tour / Booking Styles (Giữ nguyên) ====== */
+.detialTour-background-header {
+  background-color: var(--primary-light);
+  color: var(--text-color);
+}
+
+#tour-title {
+  color: var(--primary-dark);
+}
+
+.picture-profile {
+  width: 60px;
+  height: 60px;
+}
+
+.Booking-Section {
+  background-color: var(--primary-light);
+  transition: box-shadow 0.3s ease;
+}
+
+.Booking-Section:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-booking-tour {
+  background-color: var(--primary-main);
+  color: white;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-booking-tour:hover {
+  background-color: var(--primary-dark);
+  color: #fff;
+}
+
+.object-fit-contain {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+.card-footer {
+  background-color: var(--card-bg);
+}
+
+#autocomplete-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1050;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 4px 4px;
+  display: none;
+}
+
+#autocomplete-results:not(:empty) {
+  display: block;
+}
+
+.tour-section-header {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--primary-dark);
+}
+
+.price-display {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.bordered-image {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: white;
+  padding: 0;
+}
+
+.bg-custom-orange {
+  background-color: #ff8c00;
+}
+
+.description-text {
+  white-space: pre-line;
+}
+
+.Itinerary-text {
+  white-space: pre-line;
+}
+
+/* ===================================================== */
+/* ✅ NEW: Responsive Enhancements for Mobile Devices    */
+/* ===================================================== */
+
+@media (max-width: 767.98px) {
+  /* General padding and spacing adjustments */
+
+  .container,
+  .header-bg,
+  .section-bg {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  /* Header adjustments */
+  .header-bg {
+    padding: 25px 10px;
+    border-radius: var(--border-radius);
+  }
+
+  .header-bg h1 {
+    font-size: 1.6rem;
+  }
+
+  /* Search input group stacking */
+  .input-group {
+    display: block !important;
+  }
+
+  .input-group input[type="search"] {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .input-group button {
+    width: 100%;
+  }
+
+  /* Filter form adjustments */
+  .form-group input[type="number"] {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-group label {
+    font-size: 0.95rem;
+  }
+
+  /* Sidebar stacking above tour list */
+  .row {
+    flex-direction: column;
+  }
+
+  .col-md-3,
+  .col-md-9 {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Tour card styling */
+  .card-img-top {
+    height: 160px;
+  }
+
+  .card-body {
+    text-align: left;
+    padding: 1rem;
+  }
+
+  .card-footer {
+    text-align: center;
+  }
+
+  .card h5 {
+    font-size: 1.1rem;
+  }
+
+  /* Tour rating stars */
+  .card .bi-star,
+  .card .bi-star-fill,
+  .card .bi-star-half {
+    font-size: 1rem;
+  }
+
+  .fw-bold.text-end.text-success {
+    text-align: center !important;
+    margin-top: 0.5rem;
+  }
+
+  /* Buttons */
+  .btn,
+  .btn-primary,
+  .btn-booking-tour {
+    width: 100%;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Sorting dropdown */
+  #sortSelect {
+    font-size: 0.95rem;
+  }
+
+  /* Pagination responsive */
+  .pagination {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .pagination .page-item {
+    flex: 1 1 10%;
+    margin-bottom: 5px;
+  }
+
+  .pagination .page-link {
+    font-size: 0.8rem;
+  }
+
+  /* Autocomplete */
+  #autocomplete-results {
+    font-size: 0.9rem;
+    max-height: 200px;
+  }
+
+  /* Image gallery adjustments (in detail view) */
+  .ratio.bordered-image {
+    height: 150px !important;
+  }
+
+  .ratio.bordered-image img {
+    object-fit: cover !important;
+  }
+
+  .tour-section-header {
+    font-size: 1rem;
+  }
+
+  /*
+  .col-md-2.text-center {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding: 0.5rem;
+  }
+  .col-md-2.text-center .border {
+    padding: 0.5rem !important;
+  }
+  .col-md-2.text-center img.rounded-circle {
+    width: 48px !important;
+    height: 48px !important;
+  }
+  */
+}
+
+/* discover page*/
+.header-bg.discover-page {
+  background: url("/img/discoverHeader.png") center/cover no-repeat;
+  position: relative;
+}
+
+.header-bg.discover-page>h1 {
+  color: var(--primary-lightest);
+}
+
+.form-check-input {
+  padding: 0;
+  margin: 0;
+  margin-right: 5px;
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  z-index: 1000;
+  transform: translateX(400px);
+  transition: transform 0.3s ease;
+  max-width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.success {
+  background-color: #10b981;
+}
+
+.notification.error {
+  background-color: #ef4444;
+}
+
+.notification.info {
+  background-color: #3b82f6;
+}
+
+.save-tour-btn {
+  transition: all 0.2s ease;
+  color: var(--accent) !important;
+  font-size: 1.2rem;
+}
+
+.save-tour-btn:hover {
+  transform: scale(1.1);
+  color: var(--accent) !important;
+}
+
+.save-tour-btn.saved {
+  color: var(--accent) !important;
+}
+
+/* Floating COmparison Box Styles */
+.comparison-floating-box {
+  position: fixed;
+  bottom: 20px;
+  left: 20vw;
+  width: 60vw;
+  max-width: calc(100vw - 40px);
+  z-index: 1050;
+}
+
+.comparison-floating-box .card {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+/* Tour Slot Styles */
+.tour-slot {
+  height: 165px;
+  position: relative;
+}
+
+.placeholder-card {
+  height: 100%;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg);
+  transition: all 0.2s ease;
+}
+
+.placeholder-card:hover {
+  border-color: var(--primary-main);
+  background: (--card-bg);
+}
+
+.placeholder-icon i {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.tour-card {
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.tour-card .card-img-top {
+  height: 120px;
+  object-fit: cover;
+}
+
+.tour-card .remove-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 10px;
+  height: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  background-color: var(--primary-main);
+  color: white;
+}
+
+.tour-card .card-body {
+  padding: 0.75rem;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tour-card .card-title {
+  font-size: 0.85rem;
+  text-align: center;
+  margin-bottom: 0;
+  line-height: 1.1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#compareButton {
+  border: 1px solid var(--primary-main);
+  background-color: var(--primary-main);
+  color: white;
+  font-weight: var(--font-weight-semibold);
+}
+
+#minimizeButton {
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+}
+
+/* Minimized State - Oval on Left */
+.comparison-floating-box.minimized {
+  bottom: 20px;
+  right: auto;
+  left: 10px;
+  width: 100px;
+  height: 40px;
+}
+
+.comparison-floating-box.minimized .card {
+  height: 100%;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.comparison-floating-box.minimized .card-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background-color: var(--card-bg);
+}
+
+@media (max-width: 768px) {
+  .comparison-floating-box {
+    left: 10px;
+    width: calc(100vw - 20px);
+    bottom: 10px;
+  }
+
+  .tour-slot {
+    height: 120px;
+    margin-bottom: 0.5rem;
+  }
+
+  .tour-card .card-img-top {
+    height: 80px;
+  }
+
+  .tour-card .card-title {
+    font-size: 0.8rem;
+  }
+
+  /* Action buttons adjustment */
+  .col-md-4.col-12.d-flex.flex-column.justify-content-center {
+    margin-top: 0.5rem;
+  }
+
+  #compareButton,
+  #minimizeButton {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* Animation for appearing */
+.comparison-floating-box.show-animation {
+  animation: slideInUp 0.4s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

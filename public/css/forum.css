@@ -1,0 +1,814 @@
+/* Thread Forum Pages Module - Thien*/
+
+:root {
+    /* Color Palette */
+    --primary-dark: #023337;
+    --primary-main: #4ea674;
+    --primary-light: #c0e6b9;
+    --primary-lightest: #e9f8e7;
+
+    /* Grey Color */
+    --grey-100: #e9ecef;
+    --grey-300: #adb5bd;
+    --grey-600: #495057;
+    --grey-900: #212529;
+
+    /* Typography */
+    --font-family: "Be Vietnam Pro", "sans-serif";
+    --font-size-base: 14px;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* Spacing & Layout */
+    --border-radius: 5px;
+    --border-raidus-lg: 12px;
+}
+
+/* MAIN PAGE*/
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    border: 0 !important;
+}
+
+/* Updated Sidebar Styles */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 20px;
+    margin-top: 40px;
+    justify-content: flex-end;
+    align-content: flex-end;
+}
+
+/* Create button */
+.create-button button {
+    width: 100%;
+    background-color: var(--primary-main);
+    color: white;
+    border: 1px none;
+    padding: 30px 20px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: var(--font-weight-bold);
+    text-align: center;
+}
+
+.create-button button:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Manage thread button */
+.manage-thread button {
+    width: 100%;
+    background-color: var(--grey-100);
+    color: #023337;
+    border: 1px none;
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: var(--font-weight-bold);
+    text-align: center;
+}
+
+.manage-thread button:hover {
+    background-color: var(--grey-300);
+}
+
+/* Tags section */
+.tags {
+    width: 100%;
+    padding: 21px;
+    background-color: var(--primary-light);
+    border-radius: var(--border-raidus-lg);
+    border: 1px none;
+    font-weight: var(--font-weight-semibold);
+    color: var(--grey-900);
+    text-align: left;
+}
+
+.tags a {
+    text-decoration: none;
+    color: var(--primary-dark);
+}
+
+.tags h4 {
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 15px;
+}
+
+.badge-custom {
+    /* custom color for tags pill (cai o duoi thread) */
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    text-decoration: none;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 30px;
+}
+
+.pagination .page-link {
+    color: var(--primary-main);
+    border-color: var(--primary-light);
+    padding: 8px 12px;
+}
+
+.pagination .page-link:hover {
+    color: var(--primary-dark);
+    background-color: var(--primary-light);
+    border-color: var(--primary-main);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-main);
+    border-color: var(--primary-main);
+    color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: var(--text-muted);
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+/*button */
+.btn {
+    border-radius: var(--border-radius);
+    padding: 8px 16px;
+    font-weight: var(--font-weight-medium);
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-main);
+    border-color: var(--primary-main);
+    color: white;
+}
+
+.btn-delete {
+    background-color: var(--primary-main);
+    border-color: var(--primary-main);
+    color: rgb(173, 8, 8);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--grey-300);
+    border-color: var(--grey-600);
+    color: var(--grey-900);
+}
+
+/*Search bar and header image*/
+.header-image {
+    background: url("/img/Forum.jpg") no-repeat center center;
+    background-size: cover;
+    top: 10px;
+    height: 220px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius);
+    margin-bottom: 30px;
+}
+
+.my-posts-header-image {
+    background: url("/img/MyPosts.jpg") no-repeat center center;
+    background-size: cover;
+    top: 20px;
+    height: 120px;
+    position: relative;
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    border-radius: var(--border-radius);
+}
+
+.my-posts-header-image h1 {
+    color: var(--primary-lightest);
+    font-size: 2.5em;
+    text-align: left;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    position: absolute;
+    top: 30px;
+    left: 20px;
+}
+
+.header-title {
+    color: var(--primary-lightest);
+    font-size: 2em;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    position: absolute;
+    top: 50px;
+    width: 100%;
+}
+
+.search-form {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    max-width: 800px;
+    z-index: 2;
+}
+
+.search-form input[type="text"] {
+    padding: 10px;
+    border: none;
+    border-radius: var(--border-raidus-lg);
+    font-style: italic;
+    flex: 1;
+}
+
+.search-form input[type="text"]::placeholder {
+    color: #888;
+    font-style: italic;
+}
+
+.search-form select {
+    padding: 10px;
+    border: none;
+    border-radius: var(--border-raidus-lg);
+    background-color: var(--primary-main);
+    color: white;
+    cursor: pointer;
+}
+
+.col-12.col-md-9 {
+    margin-top: 40px;
+}
+
+.search-box {
+    max-width: 260px;
+    /* keeps it compact */
+    width: 100%;
+    /* responsive */
+}
+
+.search-box .form-control,
+.search-box .form-select,
+.search-box button {
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+.list-group-item {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color)
+}
+
+.list-group-item p {
+    color: var(--text-color)
+}
+
+/* CREATE THREAD/EDIT THREAD PAGE*/
+.thread-container {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    color: var(--text-color);
+}
+
+.thread-container h1 {
+    color: var(--text-color);
+    border-bottom: 1.5px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+/* MY THREAD PAGE*/
+.my-thread-container {
+    background-color: var(--card-bg);
+    padding: 3rem;
+    margin: auto;
+    border-radius: var(--border-radius);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.user-info {
+    margin-top: 1rem;
+    border-style: none;
+}
+
+/* THREAD DETAIL PAGE*/
+.thread-detail-container {
+    min-height: 400px;
+    border-radius: var(--border-radius);
+    top: 70px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: auto;
+}
+
+.thread-detail-container img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+}
+
+.thread-photo {
+    max-width: 900px;
+    height: auto;
+    border-radius: var(--border-raidus-lg);
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.comment-textarea textarea {
+    border-radius: 25px;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    padding: 12px 20px;
+    resize: none;
+    height: 50px;
+    align-content: center;
+    padding-right: 80px;
+    transition: height 0.3s ease;
+}
+
+.comment-textarea.has-image textarea {
+    height: 120px;
+    padding-bottom: 60px;
+}
+
+.comment-textarea .position-relative {
+    display: flex;
+    align-items: center;
+}
+
+.comment-textarea .position-absolute {
+    bottom: auto !important;
+    top: 50% !important;
+    transform: translateY(-50%);
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 24px;
+}
+
+/* When image is selected, move buttons to top */
+.comment-textarea.has-image .position-absolute {
+    top: 25px !important;
+    transform: none !important;
+}
+
+/* Image preview container */
+.image-preview {
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    right: 20px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 15px;
+    font-size: 12px;
+    color: #666;
+}
+
+.image-preview.show {
+    display: flex;
+}
+
+.image-preview img {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.image-preview .filename {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.image-preview .remove-image {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-preview .remove-image:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #666;
+}
+
+/*PROFILE PAGE*/
+.profile-container {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    padding: 2rem;
+    margin: 2rem auto;
+    color: var(--text-color);
+}
+
+.profile-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 1.5rem;
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.profile-card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-main);
+}
+
+.profile-card h1 {
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: var(--font-weight-bold);
+    color: var(--text-color);
+}
+
+.profile-card small {
+    display: block;
+    margin-top: 4px;
+    color: var(--grey-600);
+}
+
+.profile-details {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.profile-details h2 {
+    font-size: 1.4em;
+    margin-bottom: 1rem;
+    color: var(--primary-dark);
+    font-weight: var(--font-weight-semibold);
+}
+
+.profile-details p {
+    margin: 0.25rem 0;
+    color: var(--text-color);
+}
+
+.profile-stats {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.profile-stats .badge {
+    font-size: 0.9em;
+    padding: 0.6em 1em;
+    border-radius: var(--border-radius);
+}
+
+.profile-actions {
+    margin-top: 1.5rem;
+}
+
+.profile-actions .btn {
+    font-size: 0.9em;
+    font-weight: var(--font-weight-medium);
+    padding: 0.6em 1.2em;
+    border-radius: var(--border-radius);
+}
+
+/* Fine-tune the button alignment */
+.comment-textarea .btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 24px;
+    width: 24px;
+    padding: 0 !important;
+    text-decoration: none !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: none !important;
+}
+
+/* Specifically target btn-link to remove underlines */
+.comment-textarea .btn-link {
+    text-decoration: none !important;
+}
+
+/* Remove any focus or hover effects that might show underlines */
+.comment-textarea .btn:hover,
+.comment-textarea .btn:focus,
+.comment-textarea .btn:active,
+.comment-textarea .btn-link:hover,
+.comment-textarea .btn-link:focus,
+.comment-textarea .btn-link:active {
+    text-decoration: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: none !important;
+}
+
+/* Ensure Material Icons are perfectly centered */
+.comment-textarea .material-icons {
+    font-size: 18px !important;
+    line-height: 1 !important;
+    display: block !important;
+}
+
+/* Reply textarea and image preview styles - reusing comment styles */
+.reply-textarea.has-image textarea {
+    height: 90px;
+    padding-bottom: 40px;
+}
+
+.reply-textarea .position-relative {
+    display: flex;
+    align-items: center;
+}
+
+.reply-textarea .position-absolute {
+    bottom: auto !important;
+    top: 50% !important;
+    transform: translateY(-50%);
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 20px;
+}
+
+/* When image is selected, move buttons to top */
+.reply-textarea.has-image .position-absolute {
+    top: 20px !important;
+    transform: none !important;
+}
+
+/* Reply image preview container */
+.reply-image-preview {
+    position: absolute;
+    bottom: 8px;
+    left: 15px;
+    right: 15px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 6px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    font-size: 11px;
+    color: #666;
+}
+
+.reply-image-preview.show {
+    display: flex;
+}
+
+.reply-image-preview .reply-preview-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.reply-image-preview .reply-filename {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.reply-image-preview .reply-remove-image {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 1px;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reply-image-preview .reply-remove-image:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #666;
+}
+
+/* Fine-tune the reply button alignment */
+.reply-textarea .btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 20px;
+    width: 20px;
+    padding: 0 !important;
+    text-decoration: none !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: none !important;
+}
+
+/* Specifically target btn-link to remove underlines */
+.reply-textarea .btn-link {
+    text-decoration: none !important;
+}
+
+/* Remove any focus or hover effects that might show underlines */
+.reply-textarea .btn:hover,
+.reply-textarea .btn:focus,
+.reply-textarea .btn:active,
+.reply-textarea .btn-link:hover,
+.reply-textarea .btn-link:focus,
+.reply-textarea .btn-link:active {
+    text-decoration: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: none !important;
+}
+
+/* Ensure Material Icons are perfectly centered */
+.reply-textarea .material-icons {
+    font-size: 14px !important;
+    line-height: 1 !important;
+    display: block !important;
+}
+
+/* RESPONSIVE DESIGN */
+
+/* Tablet */
+@media (max-width: 768px) {
+    .header-title {
+        font-size: 2em;
+        top: 30px;
+    }
+
+    .search-form {
+        top: 150px;
+        width: 70%;
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .search-form input[type="text"],
+    .search-form select,
+    .search-form button {
+        width: 100%;
+        padding: 8px;
+    }
+
+    /* Sidebar adjustments for tablet */
+    .sidebar {
+        margin-top: 30px;
+        padding-left: 0;
+    }
+
+    .col-12.col-md-9 {
+        margin-top: 20px;
+    }
+}
+
+/* Mobile*/
+@media (max-width: 576px) {
+    .header-image {
+        height: 150px;
+    }
+
+    .header-title {
+        font-size: 1.5em;
+        top: 10px;
+    }
+
+    .search-form {
+        top: 150px;
+        width: 60%;
+        flex-direction: column;
+        gap: 8px;
+        top: 70px;
+        padding: 8px;
+    }
+
+    .search-form input[type="text"],
+    .search-form button {
+        padding: 6px;
+        font-size: 14px;
+    }
+
+    .create-button button {
+        padding: 20px 15px;
+        font-size: 14px;
+    }
+
+    .manage-thread button {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+
+    .tags {
+        padding: 15px;
+        font-size: 14px;
+    }
+
+    .list-group-item {
+        padding: 10px;
+    }
+
+    .list-group-item h5 {
+        font-size: 1.1em;
+    }
+
+    .list-group-item small {
+        font-size: 0.8em;
+    }
+
+    /* Mobile sidebar adjustments */
+    .sidebar {
+        margin-top: 20px;
+        padding-left: 0;
+    }
+}
+/*PROFILE RESPONSIVE*/
+@media (max-width: 768px) {
+    .profile-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-card img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-card h1 {
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 576px) {
+    .profile-container {
+        padding: 1rem;
+    }
+
+    .profile-details {
+        padding: 1rem;
+    }
+
+    .profile-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

@@ -1,0 +1,69 @@
+.about-hero {
+    position: relative;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 40px;
+}
+
+.hero-overlay h1 {
+    color: var(--primary-lightest);
+    font-weight: var(--font-weight-bold);
+}
+
+.tabs-menu-container {
+    border: 2px solid var(--primary-dark);
+    border-radius: var(--border-radius)
+
+}
+.nav-item .nav-link{
+    color: var(--primary-dark);
+    font-weight: var(--font-weight-semibold)
+}
+.nav-item .nav-link.active {
+    text-decoration: underline;
+    background-color: var(--card-bg);
+    color: var(--primary-dark)
+}
+
+.nav-item .nav-link:hover {
+    color: var(--primary-main)
+}
+
+#about-bambuddy-pane h3, h4, h5 {
+    color: var(--primary-dark)
+}
+
+.notification {
+position: fixed;
+top: 20px;
+right: 20px;
+padding: 15px 20px;
+border-radius: 8px;
+color: white;
+font-weight: 500;
+z-index: 1000;
+transform: translateX(400px);
+transition: transform 0.3s ease;
+max-width: 350px;
+}
+.notification.show {
+transform: translateX(0);
+}
+.notification.success {
+background-color: var(--primary-main);
+}
+.notification.error {
+background-color: #ef4444;
+}
+.notification.info {
+background-color: #3b82f6;
+}

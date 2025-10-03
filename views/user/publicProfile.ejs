@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= (userPublic?.profileInfo?.firstName || '') + ' ' + (userPublic?.profileInfo?.lastName || '') %> - Profile</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/user.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"/>
+  <script src="/js/theme-loader.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="<%= (typeof user !== 'undefined' && user && user.theme) ? user.theme : '' %>">
+  <div>
+    <%- include('../partials/navbar') %>
+  </div>
+
+  <div class="container my-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="p-4 d-flex flex-row align-items-center"
+             style="gap:16px; background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: var(--border-raidus-lg);">
+          <img src="<%= (userPublic?.profileInfo?.profilePhoto && userPublic.profileInfo.profilePhoto !== 'defaultAvatar.png')
+              ? ('/uploads/profilePicture/' + userPublic.profileInfo.profilePhoto)
+              : '/img/defaultAvatar.png' %>"
+              alt="Avatar"
+              class="rounded-circle"
+              style="width: 112px; height: 112px; object-fit: cover; box-shadow: 0 0 0 3px var(--border-color) inset;">
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center flex-wrap" style="gap:8px;">
+              <h2 class="mb-1" style="color: var(--text-color);"><%= userPublic?.profileInfo?.firstName %> <%= userPublic?.profileInfo?.lastName %></h2>
+              <% if (userPublic && userPublic.role) { %>
+                <span class="badge" style="background: var(--primary-main); color: #fff; text-transform: capitalize;">
+                  <%= userPublic.role %>
+                </span>
+              <% } %>
+            </div>
+            <p class="mb-1" style="color: var(--text-color);">
+              <% if (userPublic && userPublic.role) { %>
+                <% if (userPublic?.profileInfo?.city) { %>
+                  <span> • </span>
+                <% } %>
+              <% } %>
+              <%= userPublic?.profileInfo?.city || '' %>
+            </p>
+            <p style="white-space: pre-wrap; color: var(--text-color);" class="mb-0"><%= userPublic?.profileInfo?.bio %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12" style="min-height: 450px;">
+        <h3 class="mb-3" style="color: var(--text-color);">Public Threads</h3>
+        <% if (threads && threads.length > 0) { %>
+          <div class="list-group" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-raidus-lg); overflow: hidden;">
+            <% threads.forEach(t => { %>
+              <a class="list-group-item d-flex justify-content-between align-items-center"
+                 href="/threads/<%= t._id %>"
+                 style="background: var(--card-bg); color: var(--text-color); border-color: var(--border-color); text-decoration: none;">
+                <span><%= t.title %></span>
+                <small style="color: var(--text-muted);"><%= new Date(t.lastActivity || t.createdAt).toLocaleString() %></small>
+              </a>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <div class="text-muted" style="color: var(--text-muted) !important;">This user hasn’t created any public threads yet.</div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+<footer>
+  <div>
+    <%- include('../partials/footer') %>
+  </div>
+</footer>
+</html>
+
+

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homepage - Bambuddy</title>
+
+    <!-- Bootstrap & Fonts -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/tour.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+    />
+    <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/js/theme-loader.js"></script>
+  </head>
+
+  <body class="<%= user?.theme || 'light' %>">
+    <!-- NAVIGATION (landmark role implicitly added via Bootstrap navbar) -->
+    <%- include('../partials/navbar') %>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content" role="main">
+      <!-- SEARCH SECTION -->
+      <section
+        class="header-bg container my-3"
+        aria-labelledby="search-heading"
+      >
+        <h1 id="search-heading">Where do you want to go?</h1>
+        <div class="container">
+          <form
+            action="/discover"
+            method="GET"
+            class="mt-3 col-md-6 mx-auto"
+            role="search"
+            aria-label="Tour Search Form"
+          >
+            <div class="input-group">
+              <input
+                type="search"
+                name="search"
+                class="form-control"
+                value="<%= query.search || '' %>"
+                placeholder="Search tours"
+                aria-label="Search tours"
+              />
+              <ul
+                id="autocomplete-results"
+                class="list-group position-absolute w-100 z-10"
+                style="top: 100%"
+                role="listbox"
+                aria-label="Search suggestions"
+              ></ul>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                aria-label="Submit search"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- HIGHLIGHTED TOURS -->
+      <section class="container my-5" aria-labelledby="highlighted-heading">
+        <h2 id="highlighted-heading">Highlighted Tours</h2>
+        <p>The most well-known and booked tours</p>
+
+        <div class="row" role="list">
+          <% for(let i = 0; i < highlightTours.length; i++) { %>
+          <article class="col-md-3 mb-3" role="listitem">
+            <div class="card h-100">
+              <img
+                src="/uploads/tours/<%= highlightTours[i].images[0] %>"
+                alt="Image of <%= highlightTours[i].title %> tour"
+                class="card-img-top"
+              />
+              <div class="card-body text-center">
+                <p class="card-text"><%= highlightTours[i].title %></p>
+                <a
+                  href="/tourDetail/<%= highlightTours[i]._id %>"
+                  class="btn btn-primary btn-sm"
+                  aria-label="View details for <%= highlightTours[i].title %> tour"
+                  >View Tour</a
+                >
+              </div>
+            </div>
+          </article>
+          <% } %>
+        </div>
+
+        <div class="text-center mt-3">
+          <a
+            href="/discover"
+            class="btn btn-outline-secondary"
+            aria-label="View all tours"
+            >View All Tours</a
+          >
+        </div>
+      </section>
+
+      <!-- TOUR GUIDE CALL-TO-ACTION -->
+      <section class="section-bg mt-3" aria-labelledby="guide-heading">
+        <div class="container text-center">
+          <h2 id="guide-heading">If you are a tour guide</h2>
+          <a
+            href="/auth/login"
+            class="btn btn-primary-dark"
+            aria-label="Join as tour guide"
+            >Join Us!</a
+          >
+        </div>
+      </section>
+
+      <!-- FAMOUS LOCATIONS -->
+      <section
+        class="container my-5"
+        aria-labelledby="famous-locations-heading"
+      >
+        <h2 id="famous-locations-heading">Famous Locations</h2>
+        <p>The most-visited locations in Vietnam</p>
+
+        <div class="row" role="list">
+          <% for(let i = 0; i < highlightCities.length; i++) { let cityName =
+          highlightCities[i]._id.toLowerCase().replace(/\s+/g, ''); %>
+          <article class="col-md-3 mb-3" role="listitem">
+            <div class="card h-100">
+              <img
+                class="card-img-top"
+                src="/uploads/tours/<%= highlightCities[i].samplePhoto %>"
+                alt="Photo of <%= highlightCities[i]._id %>"
+                style="width: 100%; height: 200px; object-fit: cover"
+              />
+              <div class="card-body text-center">
+                <form
+                  method="GET"
+                  action="/discover"
+                  aria-label="Search tours in <%= highlightCities[i]._id %>"
+                >
+                  <input
+                    type="hidden"
+                    name="search"
+                    value="<%= highlightCities[i]._id %>"
+                  />
+                  <button
+                    type="submit"
+                    class="btn btn-link card-text p-0 m-0"
+                    style="text-decoration: none; color: var(--primary-dark)"
+                    aria-label="View tours in <%= highlightCities[i]._id %>"
+                  >
+                    <%= highlightCities[i]._id %>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </article>
+          <% } %>
+        </div>
+      </section>
+
+      <!-- REASONS TO CHOOSE -->
+      <section class="container my-5" aria-labelledby="reasons-heading">
+        <h2 id="reasons-heading" class="text-center mb-4">
+          Why you should use our platform?
+        </h2>
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <!-- Reason 1 -->
+            <div class="d-flex align-items-start mb-4">
+              <div
+                class="number me-3"
+                aria-hidden="true"
+                style="min-width: 50px; min-height: 50px; width: 50px"
+              >
+                1
+              </div>
+              <div>
+                <h3 class="fw-bold h5">User-friendly platform</h3>
+                <p>
+                  Experience seamless travel planning with our intuitive
+                  interface designed for international visitors. Our platform
+                  eliminates language barriers and complex booking processes,
+                  making it easy to discover and book authentic local
+                  experiences with verified guides.
+                </p>
+              </div>
+            </div>
+
+            <!-- Reason 2 -->
+            <div class="d-flex align-items-start mb-4">
+              <div
+                class="number me-3"
+                aria-hidden="true"
+                style="min-width: 50px; min-height: 50px; width: 50px"
+              >
+                2
+              </div>
+              <div>
+                <h3 class="fw-bold h5">Personalization</h3>
+                <p>
+                  Create your perfect Vietnamese journey with fully customizable
+                  itineraries tailored to your interests and schedule. Connect
+                  directly with certified local guides who can craft unique
+                  experiences beyond typical tourist routes.
+                </p>
+              </div>
+            </div>
+
+            <!-- Reason 3 -->
+            <div class="d-flex align-items-start mb-4">
+              <div
+                class="number me-3"
+                aria-hidden="true"
+                style="min-width: 50px; min-height: 50px; width: 50px"
+              >
+                3
+              </div>
+              <div>
+                <h3 class="fw-bold h5">Vietnam-centralized diversity</h3>
+                <p>
+                  Discover authentic Vietnam through passionate local experts.
+                  From bustling Ho Chi Minh City to serene Sapa landscapes,
+                  experience genuine local hospitality and uncover hidden gems
+                  that only true locals know about.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER (landmark role="contentinfo" is implicit or can be added if needed) -->
+    <%- include('../partials/footer') %>
+    <script src="/js/home.js"></script>
+  </body>
+</html>

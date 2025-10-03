@@ -1,0 +1,342 @@
+<!-- views/user/saved-tours.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saved Tours | Bambuddy</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <!-- Bootstrap Icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+
+    <!-- Google Font -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+    />
+
+    <!-- CSS Global Variable -->
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
+
+    <!-- CSS Style For Guide/User -->
+    <link rel="stylesheet" href="/css/user.css" />
+    <script src="/js/theme-loader.js"></script>
+  </head>
+  <body class="<%= user?.theme || 'light' %>">
+    <%- include('../../partials/navbar') %>
+
+    <main
+      id="main-content"
+      class="user-page-container content-fluid p-md-5 p-3 m-3 m-md-0"
+      role="main"
+      aria-label="Saved Tours Page"
+    >
+      <div class="row">
+        <aside
+          class="user-sidebar-navigation col-12 col-md-3 px-0 pe-md-3 mb-4 mb-md-0"
+          role="navigation"
+          aria-label="Dashboard navigation"
+        >
+          <ul class="nav flex-column row-gap-2 p-2" role="menubar">
+            <li
+              class="nav-item d-flex justify-content-start align-items-center"
+              role="none"
+            >
+              <a
+                class="nav-link flex-fill"
+                href="/user/profile"
+                role="menuitem"
+                aria-label="My Profile"
+                tabindex="0"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-person-circle me-2"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                >
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                  />
+                </svg>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li
+              class="nav-item d-flex justify-content-start align-items-center"
+              role="none"
+            >
+              <a
+                class="nav-link flex-fill active"
+                aria-current="page"
+                href="/user/save-tour"
+                role="menuitem"
+                aria-label="Saved Tours - Current page"
+                tabindex="0"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-bookmarks me-2"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1z"
+                  />
+                  <path
+                    d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1"
+                  />
+                </svg>
+                <span>Saved Tours</span></a
+              >
+            </li>
+            <li
+              class="nav-item d-flex justify-content-start align-items-center"
+              role="none"
+            >
+              <a
+                class="nav-link flex-fill"
+                href="/user/booking"
+                role="menuitem"
+                aria-label="My Trips"
+                tabindex="0"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-list-ul me-2"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2"
+                  />
+                </svg>
+                <span>Booking Management</span>
+              </a>
+            </li>
+            <li
+              class="nav-item d-flex justify-content-start align-items-center"
+              role="none"
+            >
+              <a
+                class="nav-link flex-fill"
+                href="/user/settings"
+                role="menuitem"
+                aria-label="Settings"
+                tabindex="0"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-gear-wide-connected me-2"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M7.068.727c.243-.97 1.62-.97 1.864 0l.071.286a.96.96 0 0 0 1.622.434l.205-.211c.695-.719 1.888-.03 1.613.931l-.08.284a.96.96 0 0 0 1.187 1.187l.283-.081c.96-.275 1.65.918.931 1.613l-.211.205a.96.96 0 0 0 .434 1.622l.286.071c.97.243.97 1.62 0 1.864l-.286.071a.96.96 0 0 0-.434 1.622l.211.205c.719.695.03 1.888-.931 1.613l-.284-.08a.96.96 0 0 0-1.187 1.187l.081.283c.275.96-.918 1.65-1.613.931l-.205-.211a.96.96 0 0 0-1.622.434l-.071.286c-.243.97-1.62.97-1.864 0l-.071-.286a.96.96 0 0 0-1.622-.434l-.205.211c-.695.719-1.888.03-1.613-.931l.08-.284a.96.96 0 0 0-1.186-1.187l-.284.081c-.96.275-1.65-.918-.931-1.613l.211-.205a.96.96 0 0 0-.434-1.622l-.286-.071c-.97-.243-.97-1.62 0-1.864l.286-.071a.96.96 0 0 0 .434-1.622l-.211-.205c-.719-.695-.03-1.888.931-1.613l.284.08a.96.96 0 0 0 1.187-1.186l-.081-.284c-.275-.96.918-1.65 1.613-.931l.205.211a.96.96 0 0 0 1.622-.434zM12.973 8.5H8.25l-2.834 3.779A4.998 4.998 0 0 0 12.973 8.5m0-1a4.998 4.998 0 0 0-7.557-3.779l2.834 3.78zM5.048 3.967l-.087.065zm-.431.355A4.98 4.98 0 0 0 3.002 8c0 1.455.622 2.765 1.615 3.678L7.375 8zm.344 7.646.087.065z"
+                  />
+                </svg>
+                <span>Settings</span>
+              </a>
+            </li>
+          </ul>
+        </aside>
+
+        <div
+          class="edit-profile-container col-md-9 col-12 px-xl-4 px-3"
+          role="main"
+          aria-label="Saved tours list"
+          style="min-height: 570px;"
+        >
+          <h1 id="saved-tours-heading">Saved Tours</h1>
+
+          <% if (savedTours.length === 0) { %>
+          <div class="text-center p-5" role="status" aria-live="polite">
+            <i class="bi bi-bookmark text-muted" style="font-size: 4rem;" aria-hidden="true"></i>
+            <h4 class="text-muted mt-3">No saved tours yet</h4>
+            <p class="text-muted">Start exploring and save tours you're interested in!</p>
+          </div>
+          <% } else { %>
+          <% savedTours.forEach(tour => { %>
+          <div class="booking-card mb-3 p-3 pe-xl-4" role="article" aria-labelledby="tour-title-<%= tour._id %>">
+            <div class="row align-items-center">
+              <div class="col-md-4 col-12 mb-3 mb-md-0">
+                <% if (tour && tour.images && tour.images.length > 0) { %>
+                <img
+                  src="/uploads/tours/<%= tour.images[0] %>"
+                  alt="<%= tour.title %> tour image"
+                  class="img-fluid rounded"
+                />
+                <% } %>
+              </div>
+              <div class="col-md-6 col-12">
+                <h5 id="tour-title-<%= tour._id %>"><%= tour.title %></h5>
+                <p>
+                  <strong>Location:</strong> <%= tour.location?.address || 'N/A'
+                  %>
+                </p>
+                <p><strong>Price:</strong> <%= tour.pricing %> VND</p>
+              </div>
+              <div class="col-md-2 col-12 text-end">
+                <button
+                  class="btn btn-outline-danger remove-saved-btn"
+                  data-tour-id="<%= tour._id %>"
+                  aria-label="Remove <%= tour.title %> from saved tours"
+                  aria-describedby="remove-tour-description"
+                >
+                  <i class="bi bi-trash me-1" aria-hidden="true"></i> Remove
+                </button>
+                <div id="remove-tour-description" class="visually-hidden">
+                  This will remove the tour from your saved list
+                </div>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+
+          <!-- Pagination -->
+          <% if (pagination && pagination.totalPages > 1) { %>
+          <nav aria-label="Saved tours pagination" class="mt-4" role="navigation">
+            <ul class="pagination justify-content-center">
+              <li class="page-item <%= !pagination.hasPrev ? 'disabled' : '' %>">
+                <% if (pagination.hasPrev) { %>
+                <a class="page-link" href="/user/save-tour?page=<%= pagination.prevPage %>" aria-label="Go to previous page">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+                <% } else { %>
+                <span class="page-link" aria-label="Previous page not available">
+                  <span aria-hidden="true">&laquo;</span>
+                </span>
+                <% } %>
+              </li>
+              
+              <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+              <li class="page-item <%= i === pagination.currentPage ? 'active' : '' %>">
+                <% if (i === pagination.currentPage) { %>
+                <span class="page-link" aria-current="page" aria-label="Current page <%= i %>"><%= i %></span>
+                <% } else { %>
+                <a class="page-link" href="/user/save-tour?page=<%= i %>" aria-label="Go to page <%= i %>"><%= i %></a>
+                <% } %>
+              </li>
+              <% } %>
+              
+              <li class="page-item <%= !pagination.hasNext ? 'disabled' : '' %>">
+                <% if (pagination.hasNext) { %>
+                <a class="page-link" href="/user/save-tour?page=<%= pagination.nextPage %>" aria-label="Go to next page">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+                <% } else { %>
+                <span class="page-link" aria-label="Next page not available">
+                  <span aria-hidden="true">&raquo;</span>
+                </span>
+                <% } %>
+              </li>
+            </ul>
+          </nav>
+          <% } %>
+          <% } %>
+        </div>
+      </div>
+    </main>
+
+    <%- include('../../partials/footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      //Notification
+      function showNotification(message, type = "success") {
+        //Remove existing notifications
+        const existingNotifications =
+          document.querySelectorAll(".notification");
+        existingNotifications.forEach((notification) => notification.remove());
+
+        //Create new notification
+        const notification = document.createElement("div");
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        //Show notifiation
+        setTimeout(() => {
+          notification.classList.add("show");
+        }, 100);
+
+        //Auto hide after 3 seconds
+        setTimeout(() => {
+          notification.classList.remove("show");
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        const removeButtons = document.querySelectorAll(".remove-saved-btn");
+
+        removeButtons.forEach((button) => {
+          button.addEventListener("click", async () => {
+            const tourId = button.getAttribute("data-tour-id");
+            if (
+              !confirm(
+                "Are you sure you want to remove this tour from saved list?"
+              )
+            )
+              return;
+
+            try {
+              const response = await fetch(
+                `/user/remove-saved-tour/${tourId}`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+
+              const result = await response.json();
+
+              if (response.ok) {
+                showNotification(result.message, "info");
+                button.closest(".booking-card").remove(); // remove from DOM
+              } else {
+                showNotification(
+                  result.error || "Failed to remove tour",
+                  "error"
+                );
+              }
+            } catch (err) {
+              console.error(err);
+              showNotification(
+                "Network error. Please try again later.",
+                "error"
+              );
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

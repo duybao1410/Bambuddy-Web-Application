@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recovery Token</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"/>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/auth.css">
+    
+  </head>
+  <body class="light">
+  <div class="token-container">
+    <div class="token-header">
+      <h1 class="token-main-title">Bambuddy</h1>
+      <h2 class="token-subtitle">Recovery Token</h2>
+    </div>
+    <div class="token-content">
+      <div class="alert" id="copyAlert"></div>
+      <div class="token-display">
+        <div class="token-text" id="tokenText">
+            <% if (token) { %> <p><%= token %></p> <% } else { %> <p>No token found.</p> <% } %>
+        </div>
+        <button class="copy-btn" id="copyBtn">
+          Copy
+        </button>
+      </div>
+      <div class="token-instructions">
+        <ul>
+          <li>Copy this recovery code and keep it somewhere safe.</li>
+          <li>You'll need it if you ever need to reset your password in case you forget it.</li>
+        </ul>
+      </div>
+      <div class="checkbox-container">
+        <input type="checkbox" id="acknowledgeCheck">
+        <label for="acknowledgeCheck">I have saved my recovery token in a secure location</label>
+      </div>
+      <div class="divider"></div>
+      <button class="continue-btn" id="continueBtn" disabled>
+        Continue
+      </button>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tokenText = document.getElementById('tokenText');
+      const copyBtn = document.getElementById('copyBtn');
+      const copyAlert = document.getElementById('copyAlert');
+      const acknowledgeCheck = document.getElementById('acknowledgeCheck');
+      const continueBtn = document.getElementById('continueBtn');
+      copyBtn.addEventListener('click', function() {
+        const token = tokenText.textContent.trim();
+        navigator.clipboard.writeText(token).then(function() {
+          showAlert('Token copied to clipboard!', 'success');
+        }).catch(function() {
+          const textArea = document.createElement('textarea');
+          textArea.value = token;
+          document.body.appendChild(textArea);
+          textArea.select();
+          try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+              showAlert('Token copied to clipboard!', 'success');
+            } else {
+              showAlert('Failed to copy token', 'error');
+            }
+          } catch (err) {
+            showAlert('Failed to copy token', 'error');
+          } finally {
+            document.body.removeChild(textArea);
+          }
+        });
+      });
+      function showAlert(message, type) {
+        copyAlert.textContent = message;
+        copyAlert.className = 'alert';
+        copyAlert.classList.add(type === 'success' ? 'alert-success' : 'alert-danger');
+        copyAlert.style.display = 'block';
+        setTimeout(function() {
+          copyAlert.style.display = 'none';
+        }, 3000);
+      }
+      acknowledgeCheck.addEventListener('change', function() {
+        continueBtn.disabled = !this.checked;
+      });
+      continueBtn.addEventListener('click', async function() {
+        try {
+            await fetch('/auth/token/viewed', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+            });
+        } catch (e) {
+            console.error('Failed to mark token as viewed', e);
+        }
+        window.location.href = '/';
+        });
+    });
+  </script>
+</body>
+</html>

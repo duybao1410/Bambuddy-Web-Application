@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= thread.title %></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSS and bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/forum.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/theme.css">
+  <!-- Google Font (align with forum pages) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"/>
+  <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="/js/theme-loader.js"></script>
+  </head>
+  <body class="<%= (typeof user !== 'undefined' && user && user.theme) ? user.theme : '' %>">
+  <!--Header Nav Bar-->
+  <div>
+    <%- include('../partials/navbar') %>
+  </div>
+
+  <div class="container">
+
+    <div class="my-posts-header-image">
+        <h1>Thread</h1>
+    </div>
+
+    <div class="row">
+      <!-- Thread content (left side) -->
+    <div class="col-12 col-md-9" style="min-height: 400px;">
+      <div class="container p-4 mb-4">
+        <h2><%= thread.title %></h2>
+        <p style="white-space: pre-wrap;"><%= thread.content %></p>
+
+        <!-- Thread images -->
+        <% if (thread.attachments && thread.attachments.length > 0) { %>
+          <% thread.attachments.forEach(file => { %>
+            <a target="_blank" href="/uploads/threads/<%= file.split("/").pop() %>">
+              <img src="/uploads/threads/<%= file.split("/").pop() %>" class="thread-photo" alt="Thread image">'
+            </a>
+          <% }) %>
+        <% } %>
+      </div>
+    </div>
+
+      <!-- User info box (right side) -->
+    <div class="col-12 col-md-3 mb-3">
+      <div class="card shadow-sm text-center p-3 thread-detail-container">
+          <!-- Header -->
+          <h6 class="text-start">Posted by:</h6>
+          <br>
+          <!-- Avatar + Username FIX WHEN HAVE PROPER AVA -->
+          <div class="d-flex justify-content-center">
+            <a href="/member/<%= thread.authorId?._id %>">
+              <img src="<%= (thread.authorId && thread.authorId.profileInfo && thread.authorId.profileInfo.profilePhoto)
+                ? ('/uploads/profilePicture/' + thread.authorId.profileInfo.profilePhoto)
+                : '/img/defaultAvatar.png' %>"
+              alt="Default Avatar" 
+                      class="rounded-circle mb-2"
+                      style="width: 100px; height: 100px; object-fit: cover;">
+            </a>
+          </div>
+
+          <p class="fw-semibold mb-3">
+            <a href="/member/<%= thread.authorId?._id %>" style="text-decoration: none; color: inherit;">
+              <%= thread.authorId?.profileInfo?.firstName%> <%= thread.authorId?.profileInfo?.lastName || "Guest" %>
+            </a>
+          </p>
+          <br>
+          <!-- Footer info -->
+          <div class="mt-auto text-muted small text-start">
+              <p class="mb-1">Posted at 
+                <%= thread.createdAt ? new Date(thread.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "" %>, 
+                <%= thread.createdAt ? new Date(thread.createdAt).toLocaleDateString() : "" %>
+              </p>
+
+              <% if (thread.tags && thread.tags.length > 0) { %>
+                <div>
+                  <strong>Tags:</strong>
+                  <% thread.tags.forEach(tag => { %>
+                    <a href="/threads/search?tags=<%= tag %>" style="text-decoration: none; color: var(--primary-dark);">
+                      #<%= tag %>
+                    </a>
+                  <% }) %>
+                </div>
+              <% } %>
+            </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Like/Dislike buttons positioned above the hr line -->
+  <div class="container mb-3">
+    <div class="d-flex gap-2">
+      <button type="button" class="btn btn-sm d-flex align-items-center gap-1 thread-reaction-btn" 
+              data-thread-id="<%= thread._id %>" data-action="like"
+              style="border: 1px solid #dee2e6; border-radius: var(--border-raidus-lg); padding: 6px 12px;">
+        <span class="material-icons" style="font-size: 16px;">thumb_up</span>
+        <span class="like-count"><%= thread.likeCount %></span>
+      </button>
+
+      <button type="button" class="btn btn-sm d-flex align-items-center gap-1 thread-reaction-btn" 
+              data-thread-id="<%= thread._id %>" data-action="dislike"
+              style="border: 1px solid #dee2e6; border-radius: var(--border-raidus-lg); padding: 6px 12px;">
+        <span class="material-icons" style="font-size: 16px;">thumb_down</span>
+        <span class="dislike-count"><%= thread.dislikeCount %></span>
+      </button>
+    </div>
+  </div>
+
+  <hr class="mt-2">
+  <div class="container">
+    <h4 class="mb-4">Conversation:</h4>
+    
+    <!-- Add Comment Form -->
+    <div class="d-flex gap-3 mb-4">
+      <div class="flex-shrink-0">
+        <img src="<%= (user && user.profilePicture)
+          ? (user.profilePicture.startsWith('http')
+              ? user.profilePicture
+              : ('/uploads/profilePicture/' + user.profilePicture))
+          : '/img/defaultAvatar.png' %>" alt="Your Avatar" class="rounded-circle" 
+               style="width: 40px; height: 40px; object-fit: cover;">
+      </div>
+      <div class="flex-grow-1 comment-textarea">
+        <form id="mainCommentForm" class="w-100">
+          <div class="position-relative">
+            <textarea name="content" id="mainCommentContent" class="form-control bg-light" placeholder="Sharing your thoughts?" required></textarea>
+            <input type="file" name="postPhotos" accept="image/*" class="d-none" id="commentFileInput">
+            
+            <!-- Image preview area -->
+            <div class="image-preview" id="imagePreview">
+              <img src="" alt="Preview" id="previewImg">
+              <span class="filename" id="fileName"></span>
+              <button type="button" class="remove-image" id="removeImage">
+                <span class="material-icons" style="font-size: 14px;">close</span>
+              </button>
+            </div>
+            
+            <div class="position-absolute">
+              <label for="commentFileInput" class="btn btn-link p-0 text-muted">
+                <span class="material-icons">image</span>
+              </label>
+              <button type="submit" class="btn btn-link p-0 text-primary" id="mainCommentSubmit">
+                <span class="material-icons" style="color: var(--primary-main);">send</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Comments List -->
+    <%
+      const commentList = Array.isArray(comments) && comments.length
+        ? comments
+        : (Array.isArray(thread?.comments) ? thread.comments : []);
+    %>
+    <% if (commentList.length > 0) { %>
+      <div class="comments-section">
+        <% commentList.forEach(comment => { %>
+          <div class="d-flex gap-3 mb-4">
+            <!-- Comment Avatar -->
+            <div class="flex-shrink-0">
+              <a href="/member/<%= comment.authorId?._id %>">
+                <img src="<%= (comment.authorId && comment.authorId.profileInfo && comment.authorId.profileInfo.profilePhoto)
+                ? ('/uploads/profilePicture/' + comment.authorId.profileInfo.profilePhoto)
+                : '/img/defaultAvatar.png' %>" alt="Default Avatar" class="rounded-circle" 
+                style="width: 40px; height: 40px; object-fit: cover;">
+              </a>
+            </div>
+            
+            <!-- Comment Content -->
+            <div class="flex-grow-1">
+              <div>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <strong style="font-size: 14px; color: #333;">
+                    <a href="/member/<%= comment.authorId?._id %>" style="text-decoration: none; color: inherit;">
+                      <%= (comment.authorId?.profileInfo?.firstName || "") + " " + (comment.authorId?.profileInfo?.lastName || "Anonymous") %>
+                    </a>
+                  </strong>
+                  <small style="color: #666; font-size: 12px;">
+                    <%= comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() + ' at ' + new Date(comment.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "" %>
+                  </small>
+                </div>
+                
+                <p class="mb-0" style="font-size: 14px; line-height: 1.4; color: #333;">
+                  <%= comment.content %>
+                </p>
+                
+                <!-- Comment Image -->
+                <% if (comment.postPhotos && comment.postPhotos.trim() !== "") { %>
+                  <div class="mt-2">
+                    <img src="/uploads/posts/<%= comment.postPhotos.split("/").pop() %>" 
+                         alt="Comment image" class="img-fluid rounded" style="max-width: 300px;">
+                  </div>
+                <% } %>
+              </div>
+              
+              <!-- Comment Actions -->
+              <div class="d-flex align-items-center gap-2 mt-2 ms-3">
+                <button type="button" class="btn btn-sm d-flex align-items-center gap-1 comment-reaction-btn" 
+                        data-comment-id="<%= comment._id %>" data-action="like" data-comment-type="main"
+                        style="border: 1px solid #dee2e6; border-radius: var(--border-raidus-lg); padding: 4px 10px;">
+                  <span class="material-icons" style="font-size: 14px;">thumb_up</span>
+                  <span class="like-count"><%= comment.likes || 0 %></span>
+                </button>
+                
+                <button type="button" class="btn btn-sm d-flex align-items-center gap-1 comment-reaction-btn" 
+                        data-comment-id="<%= comment._id %>" data-action="dislike" data-comment-type="main"
+                        style="border: 1px solid #dee2e6; border-radius: var(--border-raidus-lg); padding: 4px 10px;">
+                  <span class="material-icons" style="font-size: 14px;">thumb_down</span>
+                  <span class="dislike-count"><%= comment.dislikes || 0 %></span>
+                </button>
+                
+                <!-- Delete button - only show if user is logged in and is the comment author -->
+                <% if (user && comment.authorId && comment.authorId._id && user.id === comment.authorId._id.toString()) { %>
+                  <form action="/threads/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display:inline;" 
+                        onsubmit="return confirm('Are you sure you want to delete this comment?')">
+                    <button type="submit" class="btn btn-link btn-sm text-danger p-0 ms-2" style="font-size: 12px;">
+                      <span class="material-icons" style="font-size: 20px;">delete</span>
+                    </button>
+                  </form>
+                <% } %>
+              </div>
+
+              <!-- Replies Section -->
+              <% if (Array.isArray(comment.replies) && comment.replies.length > 0) { %>
+                <div class="mt-3 ms-4">
+                  <% comment.replies.forEach(reply => { %>
+                    <div class="d-flex gap-3 mb-3">
+                      <div class="flex-shrink-0">
+                        <a href="/member/<%= reply.authorId?._id %>">
+                          <img src="<%= (reply.authorId && reply.authorId.profileInfo && reply.authorId.profileInfo.profilePhoto)
+                          ? ('/uploads/profilePicture/' + reply.authorId.profileInfo.profilePhoto)
+                          : '/img/defaultAvatar.png' %>"
+                          class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;">
+                        </a>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div>
+                          <div class="d-flex align-items-center gap-2 mb-1">
+                            <strong style="font-size: 13px; color: #333;">
+                              <a href="/member/<%= reply.authorId?._id %>" style="text-decoration: none; color: inherit;">
+                                <%= (reply.authorId?.profileInfo?.firstName || "") + " " + (reply.authorId?.profileInfo?.lastName || "Anonymous") %>
+                              </a>
+                            </strong>
+                            <small style="color: #666; font-size: 11px;">
+                              <%= reply.createdAt ? new Date(reply.createdAt).toLocaleDateString() + ' at ' + new Date(reply.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "" %>
+                            </small>
+                          </div>
+                          <p class="mb-0" style="font-size: 13px; line-height: 1.4; color: #333;">
+                            <%= reply.content %>
+                          </p>
+                          <% if (reply.postPhotos) { %>
+                            <div class="mt-2">
+                              <img src="/uploads/posts/<%= reply.postPhotos.split('posts/')[1] %>" 
+                                   alt="Reply image" class="img-fluid rounded" style="max-width: 250px;">
+                            </div>
+                          <% } %>
+                        </div>
+                        
+                        <!-- Reply Actions -->
+                        <div class="d-flex align-items-center gap-2 mt-2 ms-2">
+                          <button type="button" class="btn btn-sm d-flex align-items-center gap-1 comment-reaction-btn" 
+                                  data-comment-id="<%= reply._id %>" data-action="like" data-comment-type="reply"
+                                  style="border: 1px solid #dee2e6; border-radius: var(--border-raidus-lg); padding: 3px 8px;">
+                            <span class="material-icons" style="font-size: 12px;">thumb_up</span>
+                            <span class="like-count"><%= reply.likes || 0 %></span>
+                          </button>
+                          <button type="button" class="btn btn-sm d-flex align-items-center gap-1 comment-reaction-btn" 
+                                  data-comment-id="<%= reply._id %>" data-action="dislike" data-comment-type="reply"
+                                  style="border: 1px solid #dee2e6; border-radius: var(--border-raidus-lg); padding: 3px 8px;">
+                            <span class="material-icons" style="font-size: 12px;">thumb_down</span>
+                            <span class="dislike-count"><%= reply.dislikes || 0 %></span>
+                          </button>
+                          
+                          <!-- Delete button for replies -->
+                          <% if (user && reply.authorId && reply.authorId._id && user.id === reply.authorId._id.toString()) { %>
+                            <form action="/threads/comments/<%= reply._id %>?_method=DELETE" method="POST" style="display:inline;" 
+                                  onsubmit="return confirm('Are you sure you want to delete this reply?')">
+                              <button type="submit" class="btn btn-link btn-sm text-danger p-0 ms-2" style="font-size: 11px;">
+                                <span class="material-icons" style="font-size: 14px;">delete</span>
+                              </button>
+                            </form>
+                          <% } %>
+                        </div>
+                      </div>
+                    </div>
+                  <% }) %>
+                </div>
+              <% } %>
+
+              <!-- Reply Form with Image Preview -->
+              <div class="d-flex gap-2 mt-3 ms-4">
+                <div class="flex-shrink-0">
+                  <img src="<%= (user && user.profilePicture)
+                    ? (user.profilePicture.startsWith('http')
+                        ? user.profilePicture
+                        : ('/uploads/profilePicture/' + user.profilePicture))
+                    : '/img/defaultAvatar.png' %>" alt="Your Avatar" class="rounded-circle" 
+                         style="width: 32px; height: 32px; object-fit: cover;">
+                </div>
+                <div class="flex-grow-1 reply-textarea" data-comment-id="<%= comment._id %>">
+                  <form class="reply-form w-100" data-parent-comment-id="<%= comment._id %>">
+                    <div class="position-relative">
+                      <textarea name="content" class="reply-content form-control border-0 bg-light" 
+                                style="border-radius: 20px; padding: 8px 15px; resize: none; min-height: 40px; font-size: 13px;" 
+                                placeholder="Reply..." required></textarea>
+                      <input type="file" name="postPhotos" accept="image/*" class="d-none reply-file-input" data-comment-id="<%= comment._id %>">
+                      
+                      <!-- Reply Image preview area -->
+                      <div class="reply-image-preview" id="replyImagePreview<%= comment._id %>">
+                        <img src="" alt="Preview" class="reply-preview-img">
+                        <span class="reply-filename"></span>
+                        <button type="button" class="reply-remove-image">
+                          <span class="material-icons" style="font-size: 14px;">close</span>
+                        </button>
+                      </div>
+                      
+                      <div class="position-absolute" style="bottom: 8px; right: 12px;">
+                        <label class="btn btn-link p-0 text-muted reply-file-label" style="font-size: 14px;">
+                          <span class="material-icons">image</span>
+                        </label>
+                        <button type="submit" class="btn btn-link p-0 text-primary ms-2 reply-submit" style="font-size: 14px;">
+                          <span class="material-icons" style="color: var(--primary-main);">send</span>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="text-center text-muted py-5">
+        <p>No comments yet. Be the first to share your thoughts!</p>
+      </div>
+    <% } %>
+  </div>
+  </div>
+  <br>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-6Cm2eKq1F+0p8y+X9x2h4fQF6V5I6w5n3Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5" crossorigin="anonymous"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Thread reaction handlers
+        document.querySelectorAll('.thread-reaction-btn').forEach(btn => {
+          btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const threadId = this.getAttribute('data-thread-id');
+            const action = this.getAttribute('data-action');
+            
+            try {
+              const response = await fetch(`/threads/${threadId}/react`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-Requested-With': 'XMLHttpRequest',
+                  'Accept': 'application/json'
+                },
+                body: JSON.stringify({ action })
+              });
+              
+              const data = await response.json();
+              
+              if (data.success) {
+                // Update like and dislike counts for thread
+                const likeCountElement = document.querySelector('.thread-reaction-btn[data-action="like"] .like-count');
+                const dislikeCountElement = document.querySelector('.thread-reaction-btn[data-action="dislike"] .dislike-count');
+                
+                if (likeCountElement) likeCountElement.textContent = data.data.likeCount;
+                if (dislikeCountElement) dislikeCountElement.textContent = data.data.dislikeCount;
+                
+                // Update button styles based on user reaction
+                updateReactionButtonStyles('.thread-reaction-btn', data.data.userReaction);
+              } else {
+                console.error('Thread reaction failed:', data.message);
+              }
+            } catch (error) {
+              console.error('Error updating thread reaction:', error);
+            }
+          });
+        });
+
+        // Comment reaction handlers
+        document.querySelectorAll('.comment-reaction-btn').forEach(btn => {
+          btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const commentId = this.getAttribute('data-comment-id');
+            const action = this.getAttribute('data-action');
+            
+            try {
+              const response = await fetch(`/threads/comments/${commentId}/react`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-Requested-With': 'XMLHttpRequest',
+                  'Accept': 'application/json'
+                },
+                body: JSON.stringify({ action })
+              });
+              
+              const data = await response.json();
+              
+              if (data.success) {
+                // Update like and dislike counts for this specific comment
+                // Find buttons with the same comment ID to ensure we're targeting the right comment/reply
+                const commentId = this.getAttribute('data-comment-id');
+                const likeCountElement = document.querySelector(`.comment-reaction-btn[data-comment-id="${commentId}"][data-action="like"] .like-count`);
+                const dislikeCountElement = document.querySelector(`.comment-reaction-btn[data-comment-id="${commentId}"][data-action="dislike"] .dislike-count`);
+                
+                if (likeCountElement) likeCountElement.textContent = data.data.likes;
+                if (dislikeCountElement) dislikeCountElement.textContent = data.data.dislikes;
+                
+                // Update both buttons for this specific comment/reply only
+                const commentButtons = document.querySelectorAll(`.comment-reaction-btn[data-comment-id="${commentId}"]`);
+                updateReactionButtonStyles(commentButtons, data.data.userReaction);
+              } else {
+                console.error('Comment reaction failed:', data.message);
+              }
+            } catch (error) {
+              console.error('Error updating comment reaction:', error);
+            }
+          });
+        });
+
+        // Main comment form AJAX handler
+        const mainCommentForm = document.getElementById('mainCommentForm');
+        if (mainCommentForm) {
+          mainCommentForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const content = document.getElementById('mainCommentContent').value.trim();
+            const fileInput = document.getElementById('commentFileInput');
+            
+            if (!content) {
+              console.error('Comment content is required');
+              return;
+            }
+            
+            try {
+              const formData = new FormData();
+              formData.append('content', content);
+              if (fileInput.files[0]) {
+                formData.append('postPhotos', fileInput.files[0]);
+              }
+              
+              const response = await fetch(`/threads/<%= thread._id %>/comments`, {
+                method: 'POST',
+                headers: {
+                  'X-Requested-With': 'XMLHttpRequest',
+                  'Accept': 'application/json'
+                },
+                body: formData
+              });
+              
+              const data = await response.json();
+              
+              if (data.success) {
+                // Clear the form
+                document.getElementById('mainCommentContent').value = '';
+                fileInput.value = '';
+                const imagePreview = document.getElementById('imagePreview');
+                if (imagePreview) {
+                  imagePreview.classList.remove('show');
+                  document.getElementById('previewImg').src = '';
+                  document.getElementById('fileName').textContent = '';
+                }
+                
+                // Reload the page to show the new comment
+                location.reload();
+              } else {
+                console.error('Failed to add comment:', data.message);
+              }
+            } catch (error) {
+              console.error('Error adding comment:', error);
+            }
+          });
+        }
+
+        // Reply forms AJAX handler
+        document.querySelectorAll('.reply-form').forEach(form => {
+          form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const content = this.querySelector('.reply-content').value.trim();
+            const parentCommentId = this.getAttribute('data-parent-comment-id');
+            const fileInput = this.querySelector('.reply-file-input');
+            
+            if (!content) {
+              console.error('Reply content is required');
+              return;
+            }
+            
+            try {
+              const formData = new FormData();
+              formData.append('content', content);
+              formData.append('parentCommentId', parentCommentId);
+              if (fileInput.files[0]) {
+                formData.append('postPhotos', fileInput.files[0]);
+              }
+              
+              const response = await fetch(`/threads/<%= thread._id %>/comments`, {
+                method: 'POST',
+                headers: {
+                  'X-Requested-With': 'XMLHttpRequest',
+                  'Accept': 'application/json'
+                },
+                body: formData
+              });
+              
+              const data = await response.json();
+              
+              if (data.success) {
+                // Clear the form
+                this.querySelector('.reply-content').value = '';
+                fileInput.value = '';
+                const imagePreview = this.querySelector('.reply-image-preview');
+                if (imagePreview) {
+                  imagePreview.classList.remove('show');
+                  imagePreview.querySelector('.reply-preview-img').src = '';
+                  imagePreview.querySelector('.reply-filename').textContent = '';
+                }
+                
+                // Reload the page to show the new reply
+                location.reload();
+              } else {
+                console.error('Failed to add reply:', data.message);
+              }
+            } catch (error) {
+              console.error('Error adding reply:', error);
+            }
+          });
+        });
+
+        // Handle reply file input clicks
+        document.querySelectorAll('.reply-file-label').forEach(label => {
+          label.addEventListener('click', function() {
+            const form = this.closest('.reply-form');
+            const fileInput = form.querySelector('.reply-file-input');
+            fileInput.click();
+          });
+        });
+
+        // Main comment image preview
+        const fileInput = document.getElementById('commentFileInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        const fileName = document.getElementById('fileName');
+        const removeBtn = document.getElementById('removeImage');
+        const textarea = document.querySelector('.comment-textarea');
+        
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Show preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        fileName.textContent = file.name;
+                        imagePreview.classList.add('show');
+                        textarea.classList.add('has-image');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            removeBtn.addEventListener('click', function() {
+                fileInput.value = '';
+                imagePreview.classList.remove('show');
+                textarea.classList.remove('has-image');
+                previewImg.src = '';
+                fileName.textContent = '';
+            });
+        }
+
+        // Reply forms image preview - handle multiple reply forms
+        document.querySelectorAll('.reply-file-input').forEach(function(replyFileInput) {
+            const form = replyFileInput.closest('.reply-form');
+            const replyImagePreview = form.querySelector('.reply-image-preview');
+            const replyPreviewImg = replyImagePreview.querySelector('.reply-preview-img');
+            const replyFileName = replyImagePreview.querySelector('.reply-filename');
+            const replyRemoveBtn = replyImagePreview.querySelector('.reply-remove-image');
+            
+            replyFileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Show preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        replyPreviewImg.src = e.target.result;
+                        replyFileName.textContent = file.name;
+                        replyImagePreview.classList.add('show');
+                        form.classList.add('has-image');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            replyRemoveBtn.addEventListener('click', function() {
+                replyFileInput.value = '';
+                replyImagePreview.classList.remove('show');
+                form.classList.remove('has-image');
+                replyPreviewImg.src = '';
+                replyFileName.textContent = '';
+            });
+        });
+    });
+
+    // Helper function to update reaction button styles
+    function updateReactionButtonStyles(selector, userReaction) {
+      const buttons = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
+      
+      buttons.forEach(btn => {
+        const action = btn.getAttribute('data-action');
+        
+        // Reset all button styles
+        btn.style.backgroundColor = '';
+        btn.style.color = '';
+        btn.style.borderColor = '#dee2e6';
+        
+        // Apply active style if user has reacted
+        if (userReaction === action) {
+          btn.style.backgroundColor = action === 'like' ? '#28a745' : '#dc3545';
+          btn.style.color = 'white';
+          btn.style.borderColor = action === 'like' ? '#28a745' : '#dc3545';
+        }
+      });
+    }
+
+  </script>
+</body>
+
+<footer>
+  <!-- Footer -->
+   <div>
+    <%- include('../partials/footer') %>
+  </div>
+</footer>
+
+</html>
