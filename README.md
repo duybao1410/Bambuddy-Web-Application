@@ -8,7 +8,6 @@ It provides a tour booking system, management dashboards, and a forum for discus
 ## 🔗 Website Access
 
 - **Live Website URL:** [https://bambuddy.onrender.com](https://bambuddy.onrender.com)
-- **GitHub Repository URL:** [https://github.com/RMIT-Vietnam-Teaching/group-project-wps-2025b-4bit.git]
 
 ---
 
@@ -118,7 +117,7 @@ We use **MongoDB Atlas** for our database.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/RMIT-Vietnam-Teaching/group-project-wps-2025b-4bit.git
+git clone https://github.com/duybao1410/Bambuddy-Web-Application.git
 ```
 
 2. Install Dependencies
