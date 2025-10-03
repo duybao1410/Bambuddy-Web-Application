@@ -1,8 +1,8 @@
 # 🌏 Bambuddy Web Application
 
 Bambuddy is a full-stack Node.js web application designed to connect international travelers with qualified local tour guides.
-
 It provides a tour booking system, management dashboards, and a forum for discussion.
+
 ---
 
 
