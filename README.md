@@ -4,7 +4,11 @@ Bambuddy is a full-stack Node.js web application designed to connect internation
 It provides a tour booking system, management dashboards, and a forum for discussion.
 
 ---
+## 🔗 Project Overview doc 
 
+- **Live Website URL:** https://docs.google.com/document/d/18WNLq97LKyvkpNxUhQojp8OCLuwqVhX6j6XoOkcWyms/edit?tab=t.0#heading=h.loja6rpf1zh
+
+---
 ## 🔗 Website Access
 
 - **Live Website URL:** [https://bambuddy.onrender.com](https://bambuddy.onrender.com)
