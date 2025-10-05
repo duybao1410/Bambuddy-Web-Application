@@ -9,7 +9,6 @@ It provides a tour booking system, management dashboards, and a forum for discus
 ## 🔗 Website Access
 
 - **Live Website URL:** [https://bambuddy.onrender.com](https://bambuddy.onrender.com)
-- **GitHub Repository URL:** [https://github.com/RMIT-Vietnam-Teaching/group-project-wps-2025b-4bit.git]
 =======
 =======
 
