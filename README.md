@@ -8,7 +8,7 @@ It provides a tour booking system, management dashboards, and a forum for discus
 
 ## 🔗 Website Access
 
-- **Live Website URL:** [https://bambuddy.onrender.com](https://bambuddy.onrender.com)
+- **Live Website URL:** [https://bambuddy.onrender.com](https://bambuddy.onrender.com) or https://bumbuddy.publicvm.com 
 =======
 =======
 
