@@ -1,0 +1,1 @@
+Xuất ra Elastic IP của server
